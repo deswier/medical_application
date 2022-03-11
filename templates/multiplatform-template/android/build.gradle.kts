@@ -22,5 +22,14 @@ android {
 
 dependencies {
     implementation(project(":common"))
-    implementation("androidx.activity:activity-compose:1.3.0")
+    implementation("androidx.activity:activity-compose:1.4.0")
+    implementation(compose.desktop.currentOs)
+    implementation("com.google.guava:guava:31.0.1-jre")
+    implementation("org.postgresql:postgresql:42.3.2")
+    implementation("junit:junit:4.13.2")
+    implementation("org.projectlombok:lombok:1.18.20")
+    implementation("org.projectlombok:lombok:1.18.20")
+
+    annotationProcessor("org.projectlombok:lombok:1.18.22")
+    annotationProcessor("org.projectlombok:lombok:1.18.22")
 }

@@ -49,3 +49,6 @@ android {
         }
     }
 }
+//dependencies {
+//    implementation(project(mapOf("path" to ":android")))
+//}

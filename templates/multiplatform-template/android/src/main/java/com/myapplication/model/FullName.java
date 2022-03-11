@@ -8,10 +8,24 @@ public class FullName {
     String secondName;
     private static final String regexName = ("[a-zA-Z]+ | [а-яА-Я]+");
 
-    FullName(String firstName, String secondName) {
+    public FullName(String firstName, String secondName) {
         if (isCorrectName(firstName) && isCorrectName(secondName))
             this.firstName = firstUpperCase(firstName);
         this.secondName = firstUpperCase(secondName);
+    }
+
+    public FullName(String fullName) throws Exception {
+        String[] names=getFirstSecondName(fullName);
+        if (isCorrectName(firstName) && isCorrectName(secondName))
+            this.firstName = firstUpperCase(firstName);
+        this.secondName = firstUpperCase(secondName);
+    }
+
+
+    private String[] getFirstSecondName(String fullName) throws Exception {
+        String[] names=fullName.split(" ");
+        if(names.length!=2) throw new Exception();
+        else return names;
     }
 
     private String firstUpperCase(String word) {
