@@ -1,21 +1,25 @@
 package com.myapplication.model;
 
+import com.myapplication.exception.DataException;
+
 import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class FullName {
     String firstName;
     String secondName;
-    private static final String regexName = ("[a-zA-Z]+ | [а-яА-Я]+");
+    private static final String regexName = ("([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{1,23})");
 
-    public FullName(String firstName, String secondName) {
-        if (isCorrectName(firstName) && isCorrectName(secondName))
+    public FullName(String firstName, String secondName) throws DataException {
+        if (isCorrectName(firstName) && isCorrectName(secondName)) {
             this.firstName = firstUpperCase(firstName);
-        this.secondName = firstUpperCase(secondName);
+            this.secondName = firstUpperCase(secondName);
+        }
+        else throw new DataException("Name is invalid "+firstName+" "+secondName);
     }
 
     public FullName(String fullName) throws Exception {
-        String[] names=getFirstSecondName(fullName);
+        String[] names = getFirstSecondName(fullName);
         if (isCorrectName(firstName) && isCorrectName(secondName))
             this.firstName = firstUpperCase(firstName);
         this.secondName = firstUpperCase(secondName);
@@ -23,8 +27,8 @@ public class FullName {
 
 
     private String[] getFirstSecondName(String fullName) throws Exception {
-        String[] names=fullName.split(" ");
-        if(names.length!=2) throw new Exception();
+        String[] names = fullName.split(" ");
+        if (names.length != 2) throw new Exception();
         else return names;
     }
 
@@ -39,5 +43,17 @@ public class FullName {
         } catch (NullPointerException e) {
             return false;
         }
+    }
+
+    public String getFullName() {
+        return firstName + " " + secondName;
+    }
+
+    @Override
+    public String toString() {
+        return "FullName{" +
+                "firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                '}';
     }
 }
