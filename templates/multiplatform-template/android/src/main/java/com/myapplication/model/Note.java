@@ -4,11 +4,12 @@ import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 @Getter
-public class Note {
+public class Note implements Serializable {
      private UUID uuid;
     private String lab;
      private FullName name;

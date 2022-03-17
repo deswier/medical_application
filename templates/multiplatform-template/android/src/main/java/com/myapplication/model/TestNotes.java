@@ -3,11 +3,12 @@ package com.myapplication.model;
 import com.myapplication.exception.DataException;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Getter
-public class TestNotes {
-    List<Note> notes = new ArrayList<>();
+public class TestNotes implements Serializable {
+    ArrayList<Note> notes = new ArrayList<>();
 
     public TestNotes() throws DataException {
         add();
@@ -34,7 +35,11 @@ public class TestNotes {
         return res;
     }
 
-    boolean isSubstring(String substr, String str) {
+    public ArrayList<Note> getNotes() {
+        return notes;
+    }
+
+    private boolean isSubstring(String substr, String str) {
         String[] strArray = str.split(" ");
         for (String s : strArray) {
             if(s.length()>=substr.length())

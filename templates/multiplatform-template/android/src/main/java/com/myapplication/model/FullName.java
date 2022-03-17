@@ -2,10 +2,11 @@ package com.myapplication.model;
 
 import com.myapplication.exception.DataException;
 
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class FullName {
+public class FullName implements Serializable {
     String firstName;
     String secondName;
     private static final String regexName = ("([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{1,23})");

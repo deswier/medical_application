@@ -8,16 +8,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = Color.Blue,
-    primaryVariant = Color.Green,
-    secondary = Color.Magenta
+    primary = Purple200,
+    primaryVariant = Purple700,
+    secondary = Teal200
 )
 
 private val LightColorPalette = lightColors(
-    primary = Color.Cyan,
-    primaryVariant = Color.LightGray,
-    secondary = Color.Yellow
-)
+    primary = Purple500,
+    primaryVariant = Purple700,
+    secondary = Teal200)
+
+@Composable
+fun ImagePickerTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable() () -> Unit
+) {
+    val colors = if (darkTheme) {
+        DarkColorPalette
+    } else {
+        LightColorPalette
+    }
+
+    MaterialTheme(
+        colors = colors,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
+    )
+}
 
 @Composable
 fun BottomNavBarDemoTheme(
