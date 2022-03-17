@@ -1,4 +1,5 @@
 package com.myapplication
+import MainScreen
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import theme.BottomNavBarDemoTheme
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,24 +25,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
-            val note = remember { TestNotes() }
-            var search by rememberSaveable { mutableStateOf("") }
-            var searchRes by rememberSaveable { mutableStateOf(note.searchNote(search)) }
-
-            iconButton(10.dp,90.dp,24.dp)
-            fieldRes(10.dp, 120.dp, searchRes.toString())
-
-            TextField(
-                value = search,
-                placeholder = { Text("Find result") },
-                singleLine = true,
-                modifier = Modifier.width(200.dp).padding(10.dp),
-                readOnly = false,
-                onValueChange = {
-                    search = it
-                    searchRes = note.searchNote(search)
-                }
-            )
+//            val note = remember { TestNotes() }
+//            var search by rememberSaveable { mutableStateOf("") }
+//            var searchRes by rememberSaveable { mutableStateOf(note.searchNote(search)) }
+            BottomNavBarDemoTheme {
+                MainScreen()
+            }
+        //            iconButton(10.dp,90.dp,24.dp)
+//            fieldRes(10.dp, 120.dp, searchRes.toString())
+//
+//            TextField(
+//                value = search,
+//                placeholder = { Text("Find result") },
+//                singleLine = true,
+//                modifier = Modifier.width(200.dp).padding(10.dp),
+//                readOnly = false,
+//                onValueChange = {
+//                    search = it
+//                    searchRes = note.searchNote(search)
+//                }
+//            )
         }
     }
 
