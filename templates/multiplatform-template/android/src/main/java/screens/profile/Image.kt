@@ -22,19 +22,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import theme.Purple500
+import androidx.core.graphics.drawable.toBitmap
+import com.myapplication.model.Profile
 
 @Composable
-fun ImagePicker() {
+fun ImagePicker(profile: Profile) {
     var imageUrl by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+    val flagPhoto = remember { mutableStateOf(profile.photo != null) }
 
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
         imageUrl = uri
     }
 
@@ -45,36 +47,76 @@ fun ImagePicker() {
                 .height(35.dp)
                 .background(Color.White),
             horizontalAlignment = Alignment.CenterHorizontally,
-           // verticalArrangement = Arrangement.Top
+            // verticalArrangement = Arrangement.Top
         ) {
         }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-               // .background(Color.LightGray)
+                // .background(Color.LightGray)
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // if (flagPhoto.value) { //if  photo
+
             imageUrl?.let {
                 if (Build.VERSION.SDK_INT < 28) {
                     bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
                 } else {
                     val source = ImageDecoder.createSource(context.contentResolver, it)
                     bitmap.value = ImageDecoder.decodeBitmap(source)
+                    profile.setPhoto(bitmap.value)
+                    flagPhoto.value = true;
                 }
+                if (flagPhoto.value) { //if  photo
 
-                bitmap.value?.let { bitmap ->
+                    bitmap.value?.let { bitmap ->
+
+                        Image(
+                            bitmap = bitmap.asImageBitmap(),
+                            contentDescription = "Gallery Image",
+                            modifier = Modifier.size(100.dp)//.padding(100.dp,50.dp)
+                                .clip(CircleShape)
+                                .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
+                        )
+                    }
+                }
+            }
+            if (flagPhoto.value) { //if  photo
+                Button(
+                    //    modifier = Modifier.padding(200.dp),
+                    onClick = {
+                        imageUrl = null
+                        bitmap.value = null
+                        flagPhoto.value = false;
+                        profile.setPhoto(null)
+                    }
+                ) {
+                    Text(
+                        text = "Delete photo",
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            } else {
+
+                val resId = context.resources.getIdentifier("no_photo", "drawable", context.packageName)
+                val img = context.getDrawable(resId)
+                if (img != null) {
                     Image(
-                        bitmap = bitmap.asImageBitmap(),
+                        //                        bitmap = bitmap.asImageBitmap(),
+                        bitmap = img.toBitmap(100, 100).asImageBitmap(),
                         contentDescription = "Gallery Image",
-                                modifier = Modifier.size(100.dp)//.padding(100.dp,50.dp)
+                        modifier = Modifier.size(100.dp)//.padding(100.dp,50.dp)
                             .clip(CircleShape)
-                                    .border(width = 3.dp,color= Color.LightGray,shape= CircleShape)
+                            .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
                     )
                 }
             }
+
 
             Spacer(modifier = Modifier.padding(20.dp))
 
@@ -91,5 +133,6 @@ fun ImagePicker() {
                 )
             }
         }
+
     }
 }
