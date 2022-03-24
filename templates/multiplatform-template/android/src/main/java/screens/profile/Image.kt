@@ -31,7 +31,7 @@ import com.myapplication.model.Profile
 fun ImagePicker(profile: Profile) {
     var imageUrl by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
-    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+    val bitmap = remember { mutableStateOf<Bitmap?>(profile.photo) }
     val flagPhoto = remember { mutableStateOf(profile.photo != null) }
 
     val launcher = rememberLauncherForActivityResult(
@@ -70,7 +70,23 @@ fun ImagePicker(profile: Profile) {
                     profile.setPhoto(bitmap.value)
                     flagPhoto.value = true;
                 }
-                if (flagPhoto.value) { //if  photo
+//                if (flagPhoto.value) { //if  photo
+//
+//                    bitmap.value?.let { bitmap ->
+//
+//                        Image(
+//                            bitmap = bitmap.asImageBitmap(),
+//                            contentDescription = "Gallery Image",
+//                            modifier = Modifier.size(100.dp)//.padding(100.dp,50.dp)
+//                                .clip(CircleShape)
+//                                .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
+//                        )
+//                    }
+//                    profile.setPhoto(bitmap.value)
+//                }
+            }
+            if (flagPhoto.value) { //if  photo
+                if (flagPhoto.value) {
 
                     bitmap.value?.let { bitmap ->
 
@@ -82,9 +98,8 @@ fun ImagePicker(profile: Profile) {
                                 .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
                         )
                     }
-                }
-            }
-            if (flagPhoto.value) { //if  photo
+                    profile.setPhoto(bitmap.value)
+                }//if  photo
                 Button(
                     //    modifier = Modifier.padding(200.dp),
                     onClick = {
