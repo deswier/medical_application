@@ -19,6 +19,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import screens.profile.iconButton
+
 @Composable
 fun ResultScreen() {
     Box(
@@ -57,22 +59,6 @@ fun ResultScreen() {
 //        )
 //
 
-    }
-}
-
-@Composable
-fun iconButton(x: Dp, y: Dp, size: Dp) {
-    val navController = rememberNavController()
-    IconButton(modifier = Modifier.padding(x, y).size(size),
-        onClick = {
-         //   newResultScreen()
-        }) {
-        Icon(
-
-            Icons.Filled.Add,
-            "contentDescription",
-            tint = Color.Green
-        )
     }
 }
 

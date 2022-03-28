@@ -50,4 +50,9 @@ public class Profile {
         return gender == 'M' || gender == 'F';
     }
 
+    public String getGenderToString(){
+        if(gender=='M') return "Мужчина";
+        else return "Женщина";
+    }
+
 }

@@ -1,39 +1,62 @@
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.unit.*
 import com.myapplication.exception.DataException
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
 import screens.profile.ImagePicker
-import screens.profile.ImagePicker2
-import theme.ImagePickerTheme
+import theme.*
 
 
 @Composable
 fun ProfileScreen(profile: Profile) {
+    var editProfile = remember { mutableStateOf(false) }
 
-    Box(
+    Row(
         modifier = Modifier
-            .fillMaxSize(),
-        // .background(Color.Blue),
-        // contentAlignment = Alignment.Center
+            .fillMaxWidth().fillMaxSize()
     ) {
-        var fName by rememberSaveable { mutableStateOf(profile.name.firstName) }
-        var sName by rememberSaveable { mutableStateOf(profile.name.secondName) }
+        IconButton(modifier = Modifier.padding(20.dp).size(24.dp),
+            onClick = {
+                editProfile.value = true
+            }) {
+            Icon(
+                Icons.Filled.Edit,
+                "contentDescription",
+                tint = Color.Blue
+            )
+        }
+    }
 
+    var paddingX = 10.dp
+    var paddingY = 200.dp
+    var fName by rememberSaveable { mutableStateOf(profile.name.firstName) }
+    var sName by rememberSaveable { mutableStateOf(profile.name.secondName) }
+    var gender = remember { mutableStateOf(profile.genderToString) }
+    Column(
+
+        modifier = Modifier
+            .fillMaxSize().padding(paddingX, paddingY),
+    ) {
         TextField(
             value = fName,
             singleLine = true,
-            modifier = Modifier.width(200.dp).padding(10.dp, 190.dp),
+            enabled = editProfile.value,
+            colors = TextFieldDefaults.textFieldColors(
+                disabledTextColor = DarkBlue,
+                backgroundColor = Color.White,
+                focusedIndicatorColor = DarkBlue, //hide the indicator
+                unfocusedIndicatorColor = BluePastel
+            ),
             onValueChange = {
                 try {
                     fName = it
@@ -43,11 +66,17 @@ fun ProfileScreen(profile: Profile) {
                 }
             }
         )
-
         TextField(
-            value = sName,
+
+            value = (sName),
             singleLine = true,
-            modifier = Modifier.width(200.dp).padding(10.dp, 250.dp),
+            enabled = editProfile.value,
+            colors = TextFieldDefaults.textFieldColors(
+                disabledTextColor = DarkBlue,
+                backgroundColor = Color.White,
+                focusedIndicatorColor = DarkBlue, //hide the indicator
+                unfocusedIndicatorColor = BluePastel
+            ),
             onValueChange = {
                 try {
                     sName = it
@@ -57,59 +86,49 @@ fun ProfileScreen(profile: Profile) {
                 }
             }
         )
-        var openSetGender = remember { mutableStateOf(false) }
-        var gender = remember { mutableStateOf(profile.gender.toString()) }
 
-        TextField(
-            value = gender.value,
-            singleLine = true,
-            modifier = Modifier.width(70.dp).padding(10.dp, 300.dp),
-            colors = TextFieldDefaults.textFieldColors(
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                disabledBackgroundColor = Color.White,
+                disabledContentColor = DarkBlue,
                 backgroundColor = Color.White,
-                focusedIndicatorColor = Color.Transparent, //hide the indicator
-                unfocusedIndicatorColor = Color.Green
+                contentColor = Color.Black
             ),
-            onValueChange = {
-                openSetGender.value = true;
-            }
-        )
-
-        IconButton(modifier = Modifier.padding(70.dp, 300.dp).size(24.dp),
+            elevation = null,
+            enabled = editProfile.value,
             onClick = {
-                if(gender.value == "M") gender.value="F"
-                else gender.value="M"
-            }) {
-            Icon(
+                if (gender.value == "Мужчина") gender.value = "Женщина"
+                else gender.value = "Мужчина"
+            }
 
-                Icons.Filled.Edit,
-                "contentDescription",
-                tint = Color.Blue
+        ) {
+            Text(gender.value, fontFamily = FontFamily.SansSerif, fontSize = 20.sp)
+        }
+
+        if (editProfile.value) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
             )
+            {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = GrassGreen, contentColor = Color.Black),
+                    elevation = null,
+                    enabled = editProfile.value,
+                    onClick = {
+                        editProfile.value = false
+                    }
+                ) {
+                    Text("Save", fontStyle = FontStyle.Normal, fontSize = 15.sp)
+                }
+            }
         }
     }
+
     ImagePickerTheme {
-        ImagePicker(profile)
+        ImagePicker(profile, 130.dp, 50.dp)
     }
 }
-
-@Composable
-fun iconGender(x: Dp, y: Dp, size: Dp) {
-    val navController = rememberNavController()
-    IconButton(modifier = Modifier.padding(x, y).size(size),
-        onClick = {
-            //   newResultScreen()
-        }) {
-        Icon(
-
-            Icons.Filled.Add,
-            "contentDescription",
-            tint = Color.Green
-        )
-    }
-}
-//@Composable
-//fun changeGender(g:String): String {
-//    return if(g == "M") "F"
-//    else "M"
-//}
-
