@@ -127,6 +127,6 @@ fun profileScreen(profile: Profile) {
     }
 
     imagePickerTheme {
-        imagePicker(profile)
+        imagePicker(profile,editProfile.value)
     }
 }

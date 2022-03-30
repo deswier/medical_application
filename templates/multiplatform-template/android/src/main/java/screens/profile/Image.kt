@@ -25,7 +25,7 @@ import androidx.core.graphics.drawable.toBitmap
 import com.myapplication.model.Profile
 
 @Composable
-fun imagePicker(profile: Profile) {
+fun imagePicker(profile: Profile, edit: Boolean) {
     var imageUrl by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     val bitmap = remember { mutableStateOf<Bitmap?>(profile.photo) }
@@ -62,23 +62,24 @@ fun imagePicker(profile: Profile) {
                             .clip(CircleShape)
                             .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
                     )
-
                 }
                 profile.setPhoto(bitmap.value)
             }
-            Button(
-                onClick = {
-                    imageUrl = null
-                    bitmap.value = null
-                    flagPhoto.value = false
-                    profile.setPhoto(null)
+            if (edit) {
+                Button(
+                    onClick = {
+                        imageUrl = null
+                        bitmap.value = null
+                        flagPhoto.value = false
+                        profile.setPhoto(null)
+                    }
+                ) {
+                    Text(
+                        text = "Delete photo",
+                        color = Color.White,
+                        fontSize = 10.sp,
+                    )
                 }
-            ) {
-                Text(
-                    text = "Delete photo",
-                    color = Color.White,
-                    fontSize = 10.sp,
-                )
             }
         } else {
 
@@ -91,7 +92,7 @@ fun imagePicker(profile: Profile) {
                     modifier = Modifier.size(100.dp)
                         .clip(CircleShape)
                         .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
-                      //  .clickable(onClick = { count.value += 1 })
+                    //  .clickable(onClick = { count.value += 1 })
 
                 )
             }
