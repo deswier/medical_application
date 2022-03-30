@@ -1,4 +1,3 @@
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,13 +12,13 @@ import androidx.compose.ui.unit.*
 import com.myapplication.exception.DataException
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
-import screens.profile.ImagePicker
+import screens.profile.imagePicker
 import theme.*
 
 
 @Composable
-fun ProfileScreen(profile: Profile) {
-    var editProfile = remember { mutableStateOf(false) }
+fun profileScreen(profile: Profile) {
+    val editProfile = remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -37,11 +36,11 @@ fun ProfileScreen(profile: Profile) {
         }
     }
 
-    var paddingX = 10.dp
-    var paddingY = 200.dp
+    val paddingX = 10.dp
+    val paddingY = 200.dp
     var fName by rememberSaveable { mutableStateOf(profile.name.firstName) }
     var sName by rememberSaveable { mutableStateOf(profile.name.secondName) }
-    var gender = remember { mutableStateOf(profile.genderToString) }
+    val gender = remember { mutableStateOf(profile.genderToString) }
     Column(
 
         modifier = Modifier
@@ -67,7 +66,6 @@ fun ProfileScreen(profile: Profile) {
             }
         )
         TextField(
-
             value = (sName),
             singleLine = true,
             enabled = editProfile.value,
@@ -128,7 +126,7 @@ fun ProfileScreen(profile: Profile) {
         }
     }
 
-    ImagePickerTheme {
-        ImagePicker(profile, 130.dp, 50.dp)
+    imagePickerTheme {
+        imagePicker(profile)
     }
 }

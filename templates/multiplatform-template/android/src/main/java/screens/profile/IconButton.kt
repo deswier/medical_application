@@ -17,10 +17,8 @@ fun iconButton(x: Dp, y: Dp, size: Dp) {
     val navController = rememberNavController()
     IconButton(modifier = Modifier.padding(x, y).size(size),
         onClick = {
-            //   newResultScreen()
         }) {
         Icon(
-
             Icons.Filled.Add,
             "contentDescription",
             tint = Color.Green

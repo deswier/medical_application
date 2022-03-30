@@ -7,10 +7,9 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -19,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.*
@@ -27,7 +25,7 @@ import androidx.core.graphics.drawable.toBitmap
 import com.myapplication.model.Profile
 
 @Composable
-fun ImagePicker(profile: Profile, x: Dp, y: Dp) {
+fun imagePicker(profile: Profile) {
     var imageUrl by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     val bitmap = remember { mutableStateOf<Bitmap?>(profile.photo) }
@@ -51,7 +49,7 @@ fun ImagePicker(profile: Profile, x: Dp, y: Dp) {
                 val source = ImageDecoder.createSource(context.contentResolver, it)
                 bitmap.value = ImageDecoder.decodeBitmap(source)
                 profile.setPhoto(bitmap.value)
-                flagPhoto.value = true;
+                flagPhoto.value = true
             }
         }
         if (flagPhoto.value) { //if  photo
@@ -60,10 +58,9 @@ fun ImagePicker(profile: Profile, x: Dp, y: Dp) {
                     Image(
                         bitmap = bitmap.asImageBitmap(),
                         contentDescription = "Gallery Image",
-                        modifier = Modifier.size(imageSize)//.padding(x,y)
+                        modifier = Modifier.size(imageSize)
                             .clip(CircleShape)
                             .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
-
                     )
 
                 }
@@ -73,7 +70,7 @@ fun ImagePicker(profile: Profile, x: Dp, y: Dp) {
                 onClick = {
                     imageUrl = null
                     bitmap.value = null
-                    flagPhoto.value = false;
+                    flagPhoto.value = false
                     profile.setPhoto(null)
                 }
             ) {
@@ -89,12 +86,13 @@ fun ImagePicker(profile: Profile, x: Dp, y: Dp) {
             val img = context.getDrawable(resId)
             if (img != null) {
                 Image(
-                    //                        bitmap = bitmap.asImageBitmap(),
                     bitmap = img.toBitmap(100, 100).asImageBitmap(),
                     contentDescription = "Gallery Image",
-                    modifier = Modifier.size(100.dp)//.padding(20.dp, 10.dp)
+                    modifier = Modifier.size(100.dp)
                         .clip(CircleShape)
                         .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
+                      //  .clickable(onClick = { count.value += 1 })
+
                 )
             }
         }
@@ -113,20 +111,4 @@ fun ImagePicker(profile: Profile, x: Dp, y: Dp) {
             }) {
         }
     }
-
-    @Composable
-    fun TextButton(
-        onClick: () -> Unit,
-        modifier: Modifier = Modifier,
-        enabled: Boolean = true,
-        interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-        elevation: ButtonElevation? = null,
-        shape: Shape = MaterialTheme.shapes.small,
-        border: BorderStroke? = null,
-        colors: ButtonColors = ButtonDefaults.textButtonColors(),
-        contentPadding: PaddingValues = ButtonDefaults.TextButtonContentPadding,
-        content: RowScope.() -> Unit
-    ): @Composable Unit {
-    }
 }
-

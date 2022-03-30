@@ -12,7 +12,7 @@ fun BottomNewResGraph(navController: NavHostController) {
         startDestination = iconButton(50.dp,50.dp,25.dp).toString()
     ) {
         composable(route = BottomBarScreen.Document.route) {
-            DocumentScreen()
+            documentScreen()
         }
 
 

@@ -18,14 +18,13 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = BottomBarScreen.Result.route
     ) {
         composable(route = BottomBarScreen.Document.route) {
-            DocumentScreen()
+            documentScreen()
         }
         composable(route = BottomBarScreen.Result.route) {
-            ResultScreen()
+            resultScreen()
         }
         composable(route = BottomBarScreen.Profile.route) {
-            System.out.println(profile)
-            ProfileScreen(profile)
+            profileScreen(profile)
         }
     }
 }

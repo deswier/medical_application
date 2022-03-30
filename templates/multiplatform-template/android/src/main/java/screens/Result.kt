@@ -1,41 +1,35 @@
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.myapplication.model.Note
 import com.myapplication.model.TestNotes
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import com.myapplication.tools.DateParser
 import screens.profile.iconButton
+import theme.BluePastel
+import theme.DarkBlue
+import theme.LightBeige
+import java.util.ArrayList
 
 @Composable
-fun ResultScreen() {
+fun resultScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-        //   .background(Color.Blue),
-        //contentAlignment = Alignment.
     ) {
         val note = remember { TestNotes() }
         var search by rememberSaveable { mutableStateOf("") }
         var searchRes by rememberSaveable { mutableStateOf(note.searchNote(search)) }
 
         iconButton(10.dp, 90.dp, 24.dp)
-        fieldRes(10.dp, 120.dp, searchRes.toString())
-
+        fieldRes(searchRes)
         TextField(
             value = search,
             placeholder = { Text("Find result") },
@@ -44,37 +38,125 @@ fun ResultScreen() {
             readOnly = false,
             onValueChange = {
                 search = it
-                System.out.println(search)
                 searchRes = if (search == "") {
                     note.notes
                 } else note.searchNote(search)
             }
         )
-
-//        Text(
-//            text = "RESULT",
-//            fontSize = MaterialTheme.typography.h3.fontSize,
-//            fontWeight = FontWeight.Bold,
-//            color = Color.White
-//        )
-//
-
     }
 }
 
 @Composable
-private fun fieldRes(x: Dp, y: Dp, searchRes: String) {
-    TextField(
-        value = searchRes,
-        readOnly = true,
-        modifier = Modifier.padding(x, y),
-        onValueChange = {
+private fun fieldRes(note: ArrayList<Note>) {
+
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(0.dp, 150.dp).verticalScroll(rememberScrollState())
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            TextField(
+                colors = TextFieldDefaults.textFieldColors(
+                    disabledTextColor = DarkBlue,
+                    backgroundColor = LightBeige,
+                    focusedIndicatorColor = DarkBlue, //hide the indicator
+                    unfocusedIndicatorColor = BluePastel
+                ),
+                value = "Date",
+                readOnly = true,
+                modifier = Modifier.width(130.dp),
+                onValueChange = {
+                })
+
+            TextField(
+                colors = TextFieldDefaults.textFieldColors(
+                    disabledTextColor = DarkBlue,
+                    backgroundColor = LightBeige,
+                    focusedIndicatorColor = DarkBlue, //hide the indicator
+                    unfocusedIndicatorColor = BluePastel
+                ),
+                value = "Result",
+                //  singleLine = true,
+                readOnly = true,
+                modifier = Modifier.width(130.dp),
+                onValueChange = {
+                })
+
+            TextField(
+                colors = TextFieldDefaults.textFieldColors(
+                    disabledTextColor = DarkBlue,
+                    backgroundColor = LightBeige,
+                    focusedIndicatorColor = DarkBlue, //hide the indicator
+                    unfocusedIndicatorColor = BluePastel
+                ),
+                value = "Reference",
+                singleLine = true,
+                readOnly = true,
+                modifier = Modifier.width(130.dp),
+                onValueChange = {
+                })
         }
-    )
+
+        for (item in note) {
+            Row(
+                modifier = Modifier.fillMaxWidth().clickable(onClick = {})
+            ) {
+                TextField(
+                    colors = TextFieldDefaults.textFieldColors(
+                        disabledTextColor = DarkBlue,
+                        backgroundColor = LightBeige,
+                        focusedIndicatorColor = DarkBlue, //hide the indicator
+                        unfocusedIndicatorColor = BluePastel
+                    ),
+                    value = DateParser.getShortDate(item.date),
+                    //singleLine = true,
+                    readOnly = true,
+                    modifier = Modifier.width(130.dp),
+                    onValueChange = {
+                    })
+
+                TextField(
+                    colors = TextFieldDefaults.textFieldColors(
+                        disabledTextColor = DarkBlue,
+                        backgroundColor = LightBeige,
+                        focusedIndicatorColor = DarkBlue, //hide the indicator
+                        unfocusedIndicatorColor = BluePastel,
+                        textColor = getResultColor(item)
+
+                    ),
+                    value = item.result +" "+ item.unit,
+                    //  singleLine = true,
+                    readOnly = true,
+                    modifier = Modifier.width(130.dp),
+                    onValueChange = {
+                    })
+
+                TextField(
+                    colors = TextFieldDefaults.textFieldColors(
+                        disabledTextColor = DarkBlue,
+                        backgroundColor = LightBeige,
+                        focusedIndicatorColor = DarkBlue, //hide the indicator
+                        unfocusedIndicatorColor = BluePastel
+                    ),
+                    value = item.referenceRange +" "+  item.unit,
+                    singleLine = true,
+                    readOnly = true,
+                    modifier = Modifier.width(130.dp),
+                    onValueChange = {
+                    })
+            }
+
+        }
+    }
+}
+
+fun getResultColor(item: Note): Color {
+    return if (item.isNormalResult) Color.Black;
+    else Color.Red;
 }
 
 @Composable
 @Preview
-fun ResultScreenPreview() {
-    ResultScreen()
+fun resultScreenPreview() {
+    resultScreen()
 }

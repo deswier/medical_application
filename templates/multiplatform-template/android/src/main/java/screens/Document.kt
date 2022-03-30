@@ -11,7 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun DocumentScreen() {
+fun documentScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -29,6 +29,6 @@ fun DocumentScreen() {
 
 @Composable
 @Preview
-fun DocumentScreenPreview() {
-    DocumentScreen()
+fun documentScreenPreview() {
+    documentScreen()
 }

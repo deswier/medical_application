@@ -1,5 +1,6 @@
 package theme
 
+import android.hardware.lights.Light
 import androidx.compose.ui.graphics.Color
 
 val Purple200 = Color(0xFFBB86FC)
@@ -13,3 +14,5 @@ val DarkGrey = Color(0x646b63)
 val BluePastel = Color(0xFF758b96)
 val BeigePastel= Color(0xFFb7b3a8)
 val DarkBlue=Color(0xFF34454c)
+val LightBeige= Color(0xFFf5f8ec)
+
