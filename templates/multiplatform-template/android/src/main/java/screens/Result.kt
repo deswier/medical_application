@@ -15,6 +15,9 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -115,25 +118,27 @@ private fun fieldRes(note: ArrayList<Note>) {
             modifier = Modifier.fillMaxWidth().background(backgroundColor)
                 .border(width = 2.dp, color = Color.LightGray),
         ) {
-            emptyField(fieldEmptyWidth)
-            Text(
-                "\nDate\n", fontSize = fontSize, modifier = Modifier.width(fieldDateWidth)
-            )
-            emptyField(fieldEmptyWidth)
+            ProvideTextStyle(TextStyle(fontWeight = FontWeight.Medium, fontSize = fontSize)) {
+                emptyField(fieldEmptyWidth)
+                Text(
+                    "\nDate\n", modifier = Modifier.width(fieldDateWidth)
+                )
+                emptyField(fieldEmptyWidth)
 
-            Text(
-                "\nTest\n", fontSize = fontSize, modifier = Modifier.width(fieldTestWidth)
-            )
-            emptyField(fieldEmptyWidth)
+                Text(
+                    "\nTest\n", modifier = Modifier.width(fieldTestWidth)
+                )
+                emptyField(fieldEmptyWidth)
 
-            Text(
-                "\nResult\n", fontSize = fontSize, modifier = Modifier.width(fieldResultWidth)
-            )
-            emptyField(fieldEmptyWidth)
+                Text(
+                    "\nResult\n", modifier = Modifier.width(fieldResultWidth)
+                )
+                emptyField(fieldEmptyWidth)
 
-            Text(
-                "\nReference\n", fontSize = fontSize, modifier = Modifier.width(fieldReferenceWidth)
-            )
+                Text(
+                    "\nReference\n", modifier = Modifier.width(fieldReferenceWidth)
+                )
+            }
         }
         Column(
             modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
