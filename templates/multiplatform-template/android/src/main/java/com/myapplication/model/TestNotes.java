@@ -34,6 +34,12 @@ public class TestNotes implements Serializable {
                 "c-реактивный белок", new Date(), "выявленно", "не выявленно", "мкмоль/л", null));
         notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
                 "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
     }
 
     public ArrayList<Note> searchNote(String findTest) {
@@ -51,9 +57,9 @@ public class TestNotes implements Serializable {
     private boolean isSubstring(String substr, String str) {
         String[] strArray = str.split(" ");
         for (String s : strArray) {
-            if(s.length()>=substr.length())
-            if (s.substring(0,substr.length()).toLowerCase(Locale.ROOT).equals(substr.toLowerCase(Locale.ROOT)))
-                return true;
+            if (s.length() >= substr.length())
+                if (s.substring(0, substr.length()).toLowerCase(Locale.ROOT).equals(substr.toLowerCase(Locale.ROOT)))
+                    return true;
         }
         return false;
     }

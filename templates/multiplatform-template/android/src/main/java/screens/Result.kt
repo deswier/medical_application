@@ -1,14 +1,20 @@
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -22,31 +28,74 @@ import java.util.ArrayList
 
 @Composable
 fun resultScreen() {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
         val note = remember { TestNotes() }
         var search by rememberSaveable { mutableStateOf("") }
         var searchRes by rememberSaveable { mutableStateOf(note.searchNote(search)) }
+        val actionSearch = remember { mutableStateOf(false) }
 
-        iconButton(10.dp, 90.dp, 24.dp)
-        fieldRes(searchRes)
-        TextField(
-            value = search,
-            placeholder = { Text("Find result") },
-            singleLine = true,
-            modifier = Modifier.width(200.dp).padding(10.dp),
-            readOnly = false,
-            onValueChange = {
-                search = it
-                searchRes = if (search == "") {
-                    note.notes
-                } else note.searchNote(search)
+        Scaffold(
+            topBar = {
+                TopAppBar {
+                    Text("Healthynetic", fontSize = 22.sp)
+                    Spacer(Modifier.weight(1f, true))
+                    ProvideTextStyle(
+                        TextStyle(
+                            color = Color.White,
+                            fontSize = 8.sp
+                        )
+                    ) {
+                    }
+                    IconButton(onClick = {
+
+                    })
+                    { Icon(Icons.Filled.Add, contentDescription = "Добавить") }
+                }
+            },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Row(
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    val focusManager = LocalFocusManager.current
+                    TextField(
+                        value = search,
+                        placeholder = {
+                            Row() {
+                                Icon(Icons.Filled.Search, contentDescription = "Поиск")
+                                Text("Search")
+                            }
+                        },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(15.dp)),
+                        readOnly = false,
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                focusManager.moveFocus(FocusDirection.Down)
+                            }
+                        ),
+                        onValueChange = {
+                            search = it
+                            searchRes = if (search == "") {
+                                note.notes
+                            } else note.searchNote(search)
+                        }
+                    )
+                    //  Icon(Icons.Filled.Search, contentDescription = "Поиск")
+                }
+                fieldRes(searchRes)
             }
-        )
+
+        }
     }
 }
+
 
 @Composable
 private fun fieldRes(note: ArrayList<Note>) {
@@ -55,16 +104,18 @@ private fun fieldRes(note: ArrayList<Note>) {
     val fieldTestWidth = (maxWidth.value / 3).dp
     val fieldResultWidth = (maxWidth.value / 4).dp
     val fieldEmptyWidth = (maxWidth.value / 50).dp
-    val fieldReferenceWidth = maxWidth - fieldDateWidth - fieldResultWidth - fieldTestWidth - fieldEmptyWidth * 3
+    val fieldReferenceWidth = maxWidth - fieldDateWidth - fieldResultWidth - fieldTestWidth - fieldEmptyWidth * 4
     val fontSize = 14.sp
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth().padding(0.dp, 150.dp)
+        modifier = Modifier.fillMaxWidth().padding(0.dp, 5.dp)
     ) {
-        val backgroundColor = BeigePastel
+        val backgroundColor = Color.White
         Row(
             modifier = Modifier.fillMaxWidth().background(backgroundColor)
+                .border(width = 2.dp, color = Color.LightGray),
         ) {
+            emptyField(fieldEmptyWidth)
             Text(
                 "\nDate\n", fontSize = fontSize, modifier = Modifier.width(fieldDateWidth)
             )
@@ -89,7 +140,7 @@ private fun fieldRes(note: ArrayList<Note>) {
         ) {
             for (item in note) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().clickable(onClick = {})
+                    modifier = Modifier.fillMaxWidth().clickable(onClick = {}).padding(fieldEmptyWidth, 0.dp)
                 ) {
                     Text(
                         "\n" + DateParser.getShortDate(item.date) + "\n",
