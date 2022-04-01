@@ -42,7 +42,7 @@ fun resultScreen(navController: NavHostController) {
             Scaffold(
                 topBar = {
                     TopAppBar {
-                        Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(50.dp))
+                        Text("Healthynetic", fontSize = 22.sp)//, modifier = Modifier.padding(50.dp))
                         Spacer(Modifier.weight(1f, true))
                         ProvideTextStyle(
                             TextStyle(color = Color.White, fontSize = 8.sp)

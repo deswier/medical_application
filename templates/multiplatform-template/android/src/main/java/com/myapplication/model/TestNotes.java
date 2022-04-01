@@ -15,27 +15,27 @@ public class TestNotes implements Serializable {
     }
 
     private void addAll() throws DataException {
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "Invitro",
                 "Fe", new Date(), "9", "9-30.4", "mm/l", "null"));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "Invitro",
                 "HbA1c", new Date(), "7", "0 -6", "%", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "Invitro",
                 "HbA1c", new Date(), "7", "0-6-8", "%", null));
-        notes.add(new Note(UUID.randomUUID(), "KDL", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "KDL",
                 "HbA1c", new Date(), "5.9", "0-6", "%", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "Invitro",
                 "Fe", new Date(), "28.85", "9-30.4", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "Invitro",
                 "Билирубин общий", new Date(), "14.3", "3.4-20.5", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "Invitro",
                 "c-реактивный белок", new Date(), "выявленно", "не выявленно", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "Invitro",
                 "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "Invitro",
                 "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "Invitro",
                 "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+        notes.add(new Note(UUID.randomUUID(), "Invitro",
                 "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
     }
 

@@ -17,19 +17,21 @@ import java.util.UUID;
 public class Note implements Serializable {
     private UUID uuid;
     private String lab;
-    private FullName name;
+    @NotNull
     private String test;
+    @NotNull
     private Date date;
+    @NotNull
     private String result;
+    @NotNull
     private String referenceRange;
     private String unit;
     private String comment;
 
-    public Note(UUID uuid, String lab, FullName name, String test, Date date, String result, String referenceRange, String unit, String comment) {
+    public Note(UUID uuid, String lab, @NotNull String test, @NotNull Date date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
         this.uuid = uuid;
         this.lab = lab;
         this.test = test;
-        this.name = name;
         this.date = date;
         this.result = result;
         this.referenceRange = referenceRange;
@@ -37,12 +39,12 @@ public class Note implements Serializable {
         this.comment = comment;
     }
 
-    public Note(UUID uuid, String lab, FullName name, String test, LocalDate date, String result, String referenceRange, String unit, String comment) throws VersionException {
-        new Note(uuid, lab, name, test, DateParser.convertToDate(date), result, referenceRange, unit, comment);
+    public Note(UUID uuid, String lab, @NotNull  String test,  @NotNull LocalDate date,  @NotNull String result,  @NotNull String referenceRange, String unit, String comment) throws VersionException {
+        new Note(uuid, lab, test, DateParser.convertToDate(date), result, referenceRange, unit, comment);
     }
 
-    public Note(String lab, FullName name, String test, LocalDate date, String result, String referenceRange, String unit, String comment) throws VersionException {
-        new Note(UUID.randomUUID(), lab, name, test, DateParser.convertToDate(date), result, referenceRange, unit, comment);
+    public Note(String lab, @NotNull  String test, @NotNull  LocalDate date,  @NotNull String result, @NotNull  String referenceRange, String unit, String comment) throws VersionException {
+        new Note(UUID.randomUUID(), lab, test, DateParser.convertToDate(date), result, referenceRange, unit, comment);
     }
 
     public boolean isNormalResult() throws DataException {
@@ -66,18 +68,21 @@ public class Note implements Serializable {
         else throw new DataException("Invalid reference range " + referenceRange);
     }
 
+    @NotNull
     @Override
     public String toString() {
-        return lab + " " + name.getFullName() + " " + test + " " + result + unit + " " + referenceRange + unit + "\n";
+        return lab + " " + test + " " + result + unit + " " + referenceRange + unit + "\n";
     }
 
     public Note() {
     }
 
+    @NotNull
     public String getTest() {
         return test;
     }
 
+    @NotNull
     public String getResult() {
         return result;
     }
@@ -90,14 +95,12 @@ public class Note implements Serializable {
         return lab;
     }
 
-    public FullName getName() {
-        return name;
-    }
-
+    @NotNull
     public Date getDate() {
         return date;
     }
 
+    @NotNull
     public String getReferenceRange() {
         return referenceRange;
     }
