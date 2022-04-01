@@ -14,7 +14,6 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun iconButton(x: Dp, y: Dp, size: Dp) {
-    val navController = rememberNavController()
     IconButton(modifier = Modifier.padding(x, y).size(size),
         onClick = {
         }) {

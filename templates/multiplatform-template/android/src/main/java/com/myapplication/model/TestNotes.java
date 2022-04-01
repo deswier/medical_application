@@ -22,24 +22,28 @@ public class TestNotes implements Serializable {
                 "Fe", new Date(), "9", "9-30.4", "mm/l", "null"));
         notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
                 "HbA1c", new Date(), "7", "0 -6", "%", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
-                "HbA1c", new Date(), "7", "0-6-8", "%", null));
-        notes.add(new Note(UUID.randomUUID(), "KDL", new FullName("Alina", "Mikhaleva"),
-                "HbA1c", new Date(), "5.9", "0-6", "%", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
-                "Fe", new Date(), "28.85", "9-30.4", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
-                "Билирубин общий", new Date(), "14.3", "3.4-20.5", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
-                "c-реактивный белок", new Date(), "выявленно", "не выявленно", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
-                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
-                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
-        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
-                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+ //       notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+//                "HbA1c", new Date(), "7", "0-6-8", "%", null));
+//        notes.add(new Note(UUID.randomUUID(), "KDL", new FullName("Alina", "Mikhaleva"),
+//                "HbA1c", new Date(), "5.9", "0-6", "%", null));
+//        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+//                "Fe", new Date(), "28.85", "9-30.4", "мкмоль/л", null));
+//        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+//                "Билирубин общий", new Date(), "14.3", "3.4-20.5", "мкмоль/л", null));
+//        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+//                "c-реактивный белок", new Date(), "выявленно", "не выявленно", "мкмоль/л", null));
+//        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+//                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+//        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+//                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
         notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
                 "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+        notes.add(new Note(UUID.randomUUID(), "Invitro", new FullName("Alina", "Mikhaleva"),
+                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+    }
+
+    public void add(Note n) throws DataException, VersionException {
+        notes.add(n);
     }
 
     public ArrayList<Note> searchNote(String findTest) {

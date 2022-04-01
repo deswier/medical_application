@@ -41,6 +41,10 @@ public class Note implements Serializable {
         new Note(uuid, lab, name, test, DateParser.convertToDate(date), result, referenceRange, unit, comment);
     }
 
+    public Note(String lab, FullName name, String test, LocalDate date, String result, String referenceRange, String unit, String comment) throws VersionException {
+        new Note(UUID.randomUUID(), lab, name, test, DateParser.convertToDate(date), result, referenceRange, unit, comment);
+    }
+
     public boolean isNormalResult() throws DataException {
         try {
             String[] arrayReferenceRange = referenceRange(referenceRange);
