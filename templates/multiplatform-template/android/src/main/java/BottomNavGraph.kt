@@ -21,10 +21,13 @@ fun BottomNavGraph(navController: NavHostController) {
             documentScreen()
         }
         composable(route = BottomBarScreen.Result.route) {
-            resultScreen()
+            resultScreen(navController)
         }
         composable(route = BottomBarScreen.Profile.route) {
             profileScreen(profile)
+        }
+        composable(route = "adderResult") {
+            newResultScreen(navController)
         }
     }
 }
