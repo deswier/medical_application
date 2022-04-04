@@ -147,7 +147,7 @@ private fun fieldRes(note: ArrayList<Note>) {
                     modifier = Modifier.fillMaxWidth().clickable(onClick = {}).padding(fieldEmptyWidth, 0.dp)
                 ) {
                     Text(
-                        "\n" + DateParser.getShortDate(item.date) + "\n",
+                        "\n" + DateParser.convertToString(item.date) + "\n",
                         fontSize = fontSize,
                         modifier = Modifier.width(fieldDateWidth)
                     )

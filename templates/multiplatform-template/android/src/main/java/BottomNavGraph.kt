@@ -11,7 +11,7 @@ import com.myapplication.tools.DateParser
 fun BottomNavGraph(navController: NavHostController) {
     val profile = remember {
         //XmlHelper.read()
-        Profile(FullName("Evgeniy","Ignatenko"), DateParser.parseStringToDate("2000-02-20"), 'M')
+        Profile(FullName("Evgeniy","Ignatenko"), DateParser.parseStringToDate("20-02-2000"), 'M')
     }
     NavHost(
         navController = navController,

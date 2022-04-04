@@ -1,21 +1,25 @@
+import android.app.DatePickerDialog
+import android.content.Context
+import android.widget.DatePicker
 import androidx.compose.foundation.interaction.MutableInteractionSource
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.VisualTransformation
@@ -25,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.tools.DateParser
 import theme.GrassGreen
+import java.util.*
 
 @Composable
 fun newResultScreen(navController: NavHostController) {
@@ -61,20 +66,16 @@ fun newResultScreen(navController: NavHostController) {
                 var comment by rememberSaveable { mutableStateOf("") }
                 var date by rememberSaveable { mutableStateOf("") }
                 val widthField = 350.dp
+
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
                         .width(widthField)
                         .padding(30.dp, 0.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
-                    OutlinedTextFieldValidation(
-                        value = date,
-                        onValueChange = {
-                            date = it
-                        },
-                        label = { Text(text = "Date") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    date = showDatePicker(LocalContext.current)
+
                     OutlinedTextFieldValidation(
                         value = test,
                         onValueChange = {
@@ -119,6 +120,7 @@ fun newResultScreen(navController: NavHostController) {
                             onValueChange = {
                             })
                     }
+
                     lab = fieldInput(lab, "Lab", widthField)
                     comment = fieldInput(comment, "Comment", widthField)
                     Button(
@@ -126,7 +128,7 @@ fun newResultScreen(navController: NavHostController) {
                             .fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(backgroundColor = GrassGreen, contentColor = Color.Black),
                         elevation = null,
-                        enabled = getEnabledSave(date, test, result, referenceRange),
+                        enabled = getEnabledSave(test, result, referenceRange),
                         onClick = {
 
                         }
@@ -139,8 +141,59 @@ fun newResultScreen(navController: NavHostController) {
     }
 }
 
-fun getEnabledSave(date: String, test: String, result: String, referenceRange: String): Boolean {
-    return date != "" && test != "" && referenceRange != "" && DateParser.isDate(date) && result != ""
+@Composable
+fun showDatePicker(
+    context: Context
+): String {
+
+    val year: Int
+    val month: Int
+    val day: Int
+
+    val calendar = Calendar.getInstance()
+    year = calendar.get(Calendar.YEAR)
+    month = calendar.get(Calendar.MONTH)
+    day = calendar.get(Calendar.DAY_OF_MONTH)
+    calendar.time = Date()
+    val date = remember { mutableStateOf(DateParser.convertToString(Date())) }
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, y: Int, m: Int, d: Int ->
+            date.value = DateParser.convertToString(DateParser.convertToDate(d, m, y))
+        }, year, month, day
+    )
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Spacer(modifier = Modifier.size(16.dp))
+        Row() {
+            OutlinedTextFieldValidation(
+                value = date.value.toString(),
+                onValueChange = {
+                },
+                enabled = false,
+                label = { Text(text = "Date") },
+            )
+            IconButton(
+                onClick = { datePickerDialog.show() },
+                Modifier.width(50.dp).padding(top=20.dp)
+            ) {
+                Icon(
+                    Icons.Filled.DateRange,
+                    "contentDescription",
+                )
+            }
+        }
+    }
+    return date.value
+}
+
+fun getEnabledSave(test: String, result: String, referenceRange: String): Boolean {
+    return test != "" && referenceRange != "" && result != ""
 }
 
 @Composable

@@ -1,40 +1,55 @@
 package com.myapplication.tools;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
+import com.myapplication.exception.DataException;
 import com.myapplication.exception.VersionException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class DateParser {
+    private static final String PATTERN = "dd-MM-yyyy";
+    private static final String SEPARATOR = "-";
 
-    public static LocalDate parseStringToDate(String s) throws VersionException {
-        DateTimeFormatter formatter = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            return LocalDate.parse(s, formatter);
-        } else
-            throw new VersionException("Sdk version" + android.os.Build.VERSION.SDK_INT + " does not satisfy the conditions " + ">= android.os.Build.VERSION_CODES.O");
+    public static LocalDate parseStringToDate(String s) throws VersionException, DataException {
+        try {
+            DateTimeFormatter formatter = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                formatter = DateTimeFormatter.ofPattern(PATTERN);
+                return LocalDate.parse(s, formatter);
+            } else
+                throw versionException();
+        } catch (RuntimeException e) {
+            throw dataException(s);
+        }
     }
 
-    public static String parseDateToString(LocalDate date) {
+    private static String separatorWithBackspace() {
+        return " " + SEPARATOR + " ";
+    }
+
+    private static DataException dataException(String date) {
+        return new DataException("date " + date + " is invalid");
+    }
+
+    public static String convertToString(LocalDate date) {
         return String.valueOf(date);
     }
 
-    public static String parseDateToString(Date date) {
-        return String.valueOf(date);
-    }
-
-    public static String getShortDate(LocalDate date) throws VersionException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return date.getDayOfMonth() + "." + getMonth(date) + " " +
-                    getYear(date);
-        } else throw new VersionException("Invalid SDK version " + Build.VERSION.SDK_INT);
+    public static String convertToString(Date date) {
+        @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(PATTERN);
+        return df.format(date);
     }
 
     public static LocalDate convertToLocalDate(Date dateToConvert) throws VersionException {
@@ -42,7 +57,7 @@ public class DateParser {
             return dateToConvert.toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate();
-        } else throw new VersionException("Invalid SDK version " + Build.VERSION.SDK_INT);
+        } else throw versionException();
     }
 
     public static Date convertToDate(LocalDate dateToConvert) throws VersionException {
@@ -50,20 +65,26 @@ public class DateParser {
             return Date.from(dateToConvert.atStartOfDay()
                     .atZone(ZoneId.systemDefault())
                     .toInstant());
-        } else throw new VersionException("Invalid SDK version " + Build.VERSION.SDK_INT);
-
+        } else throw versionException();
     }
 
-    public static String getShortDate(Date date) throws VersionException {
-        return getShortDate(convertToLocalDate(date));
+    public static Date convertToDate(int day, int month, int year) throws VersionException {
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, year);
+            cal.set(Calendar.MONTH, month);
+            cal.set(Calendar.DAY_OF_MONTH, day);
+            return cal.getTime();
+        } catch (RuntimeException e) {
+            throw versionException();
+        }
     }
 
     public static boolean isDate(String date) throws VersionException {
         try {
             parseStringToDate(date);
             return true;
-        }
-        catch (RuntimeException e){
+        } catch (RuntimeException | DataException e) {
             return false;
         }
     }
@@ -71,7 +92,7 @@ public class DateParser {
     public static String getDay(LocalDate date) throws VersionException {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             return String.valueOf(date.getDayOfMonth());
-        } else throw new VersionException("Invalid SDK version " + Build.VERSION.SDK_INT);
+        } else throw versionException();
     }
 
     public static String getMonth(LocalDate date) throws VersionException {
@@ -79,15 +100,10 @@ public class DateParser {
             int month = date.getMonth().getValue();
             if (month < 10) return "0" + month;
             else return String.valueOf(month);
-        } else throw new VersionException("Invalid SDK version " + Build.VERSION.SDK_INT);
+        } else throw versionException();
     }
-
-    public static String getYear(LocalDate date) throws VersionException {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            int yearDate = date.getYear();
-            int yearCurrent = LocalDate.now().getYear();
-            if (yearDate == yearCurrent) return "";
-            else return String.valueOf(yearDate);
-        } else throw new VersionException("Invalid SDK version " + Build.VERSION.SDK_INT);
+    
+    private static VersionException versionException() {
+        return new VersionException("Invalid SDK version " + Build.VERSION.SDK_INT);
     }
 }
