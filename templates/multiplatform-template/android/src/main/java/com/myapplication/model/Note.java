@@ -3,7 +3,6 @@ package com.myapplication.model;
 import com.myapplication.exception.DataException;
 import com.myapplication.exception.VersionException;
 import com.myapplication.tools.DateParser;
-import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,7 +61,7 @@ public class Note implements Serializable {
         }
     }
 
-    private static String[] referenceRange(String referenceRange) throws DataException {
+    public static String[] referenceRange(String referenceRange) throws DataException {
         String[] r = referenceRange.trim().split("-");
         if (r.length == 1 || r.length == 2) return r;
         else throw new DataException("Invalid reference range " + referenceRange);

@@ -4,13 +4,10 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import com.myapplication.exception.DataException;
 import com.myapplication.exception.VersionException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -33,6 +30,10 @@ public class DateParser {
         } catch (RuntimeException e) {
             throw dataException(s);
         }
+    }
+
+    public static Date convertToDate(String s) throws VersionException, DataException {
+        return convertToDate(convertToLocalDate(s));
     }
 
     private static String separatorWithBackspace() {
