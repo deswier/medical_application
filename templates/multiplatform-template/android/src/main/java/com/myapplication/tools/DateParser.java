@@ -53,13 +53,16 @@ public class DateParser {
         return df.format(date);
     }
 
-    public static String convertToTextDate(Date date) throws VersionException {
-        LocalDate lDate=convertToLocalDate(date);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return lDate.getDayOfMonth() + " " + lDate.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH)+" "+lDate.getYear();
-        }
-        else throw versionException();
+    public static String convertToStringWithoutYear(Date date) {
+        @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("dd-MM");
+        return df.format(date);
+    }
 
+    public static String convertToTextDate(Date date) throws VersionException {
+        LocalDate lDate = convertToLocalDate(date);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return lDate.getDayOfMonth() + " " + lDate.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + lDate.getYear();
+        } else throw versionException();
     }
 
     public static LocalDate convertToLocalDate(Date dateToConvert) throws VersionException {

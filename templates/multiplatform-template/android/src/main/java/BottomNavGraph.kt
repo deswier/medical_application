@@ -10,6 +10,7 @@ import com.myapplication.model.Profile
 import com.myapplication.tools.DateParser
 import screens.MainDestinations
 import screens.documentScreen
+import screens.showResultScreen
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
