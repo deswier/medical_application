@@ -24,7 +24,6 @@ import com.myapplication.model.Note
 import com.myapplication.storage.TestNotes
 import com.myapplication.tools.DateParser
 import screens.MainDestinations
-import java.util.*
 
 @Composable
 fun resultScreen(navController: NavHostController) {
@@ -73,7 +72,7 @@ fun resultScreen(navController: NavHostController) {
                             placeholder = {
                                 Row() {
                                     Icon(Icons.Filled.Search, contentDescription = "Поиск")
-                                    Text("Search")
+                                    Text("Поиск")
                                 }
                             },
                             singleLine = true,
@@ -121,22 +120,22 @@ private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
             ProvideTextStyle(TextStyle(fontWeight = FontWeight.Medium, fontSize = fontSize)) {
                 emptyField(fieldEmptyWidth)
                 Text(
-                    "\nDate\n", modifier = Modifier.width(fieldDateWidth)
+                    "\nДата\n", modifier = Modifier.width(fieldDateWidth)
                 )
                 emptyField(fieldEmptyWidth)
 
                 Text(
-                    "\nTest\n", modifier = Modifier.width(fieldTestWidth)
+                    "\nНазвание\n", modifier = Modifier.width(fieldTestWidth)
                 )
                 emptyField(fieldEmptyWidth)
 
                 Text(
-                    "\nResult\n", modifier = Modifier.width(fieldResultWidth)
+                    "\nРезультат\n", modifier = Modifier.width(fieldResultWidth)
                 )
                 emptyField(fieldEmptyWidth)
 
                 Text(
-                    "\nReference\n", modifier = Modifier.width(fieldReferenceWidth)
+                    "\nЦелевой диапазон\n", modifier = Modifier.width(fieldReferenceWidth)
                 )
             }
         }

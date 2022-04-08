@@ -11,19 +11,19 @@ sealed class BottomBarScreen(
 ) {
     object Document : BottomBarScreen(
         route = "Document",
-        title = "Document",
+        title = "Длкументы",
         icon = Icons.Default.Notifications
     )
 
     object Profile : BottomBarScreen(
         route = "Profile",
-        title = "Profile",
+        title = "Профиль",
         icon = Icons.Default.Person
     )
 
     object Result : BottomBarScreen(
         route = "Result",
-        title = "Result tests",
+        title = "Результаты",
         icon = Icons.Default.Done
     )
 }
