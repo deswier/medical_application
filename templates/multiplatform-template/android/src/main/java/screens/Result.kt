@@ -21,8 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.model.Note
-import com.myapplication.model.TestNotes
+import com.myapplication.storage.TestNotes
 import com.myapplication.tools.DateParser
+import screens.MainDestinations
 import java.util.*
 
 @Composable
@@ -91,7 +92,7 @@ fun resultScreen(navController: NavHostController) {
                             }
                         )
                     }
-                    fieldRes(searchRes)
+                    fieldRes(searchRes, navController)
                 }
             }
         }
@@ -100,7 +101,7 @@ fun resultScreen(navController: NavHostController) {
 
 
 @Composable
-private fun fieldRes(note: ArrayList<Note>) {
+private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
     val maxWidth = 390.dp
     val fieldDateWidth = (maxWidth.value / 7).dp
     val fieldTestWidth = (maxWidth.value / 3).dp
@@ -144,7 +145,10 @@ private fun fieldRes(note: ArrayList<Note>) {
         ) {
             for (item in note) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().clickable(onClick = {}).padding(fieldEmptyWidth, 0.dp)
+                    modifier = Modifier.fillMaxWidth().clickable(onClick = {
+                        val uuid=item.uuid.toString()
+                        navController.navigate("${MainDestinations.SHOW_RESULT}/$uuid")
+                    }).padding(fieldEmptyWidth, 0.dp)
                 ) {
                     Text(
                         "\n" + DateParser.convertToString(item.date) + "\n",

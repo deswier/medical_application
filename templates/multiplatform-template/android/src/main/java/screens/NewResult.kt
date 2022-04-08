@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.tools.DateParser
+import screens.outlinedTextFieldValidation
 import theme.GrassGreen
 import java.util.*
 
@@ -76,7 +77,7 @@ fun newResultScreen(navController: NavHostController) {
                 ) {
                     date = showDatePicker(LocalContext.current)
 
-                    OutlinedTextFieldValidation(
+                    outlinedTextFieldValidation(
                         value = test,
                         onValueChange = {
                             test = it
@@ -86,7 +87,7 @@ fun newResultScreen(navController: NavHostController) {
                     )
 
                     Row() {
-                        OutlinedTextFieldValidation(
+                        outlinedTextFieldValidation(
                             value = result,
                             onValueChange = {
                                 result = it
@@ -105,7 +106,7 @@ fun newResultScreen(navController: NavHostController) {
                             })
                     }
                     Row() {
-                        OutlinedTextFieldValidation(
+                        outlinedTextFieldValidation(
                             value = referenceRange,
                             onValueChange = {
                                 referenceRange = it
@@ -171,7 +172,7 @@ fun showDatePicker(
 
         Spacer(modifier = Modifier.size(16.dp))
         Row() {
-            OutlinedTextFieldValidation(
+            OutlinedTextFieldFolder(
                 value = date.value.toString(),
                 onValueChange = {
                 },
@@ -204,7 +205,7 @@ fun fieldInput(
     OutlinedTextField(value = v,
         label = { Text(label) },
         singleLine = true,
-        modifier = Modifier.width(widthField).clip(RoundedCornerShape(3.dp)).padding(0.dp, 10.dp),
+        modifier = Modifier.width(widthField).clip(RoundedCornerShape(3.dp)).padding(top=10.dp),
         onValueChange = {
             v = it
         })
@@ -212,7 +213,7 @@ fun fieldInput(
 }
 
 @Composable
-fun OutlinedTextFieldValidation(
+fun OutlinedTextFieldFolder(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier.fillMaxWidth(0.8f),

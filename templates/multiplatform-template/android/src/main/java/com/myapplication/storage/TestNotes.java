@@ -1,6 +1,7 @@
-package com.myapplication.model;
+package com.myapplication.storage;
 
 import com.myapplication.exception.DataException;
+import com.myapplication.model.Note;
 import lombok.Getter;
 
 import java.io.Serializable;

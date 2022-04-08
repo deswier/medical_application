@@ -22,7 +22,7 @@ public class DateParser {
     private static final String PATTERN = "dd-MM-yyyy";
     private static final String SEPARATOR = "-";
 
-    public static LocalDate parseStringToDate(String s) throws VersionException, DataException {
+    public static LocalDate convertToLocalDate(String s) throws VersionException, DataException {
         try {
             DateTimeFormatter formatter = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -50,6 +50,15 @@ public class DateParser {
     public static String convertToString(Date date) {
         @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(PATTERN);
         return df.format(date);
+    }
+
+    public static String convertToTextDate(Date date) throws VersionException {
+        LocalDate lDate=convertToLocalDate(date);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return lDate.getDayOfMonth() + " " + lDate.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH)+" "+lDate.getYear();
+        }
+        else throw versionException();
+
     }
 
     public static LocalDate convertToLocalDate(Date dateToConvert) throws VersionException {
@@ -82,7 +91,7 @@ public class DateParser {
 
     public static boolean isDate(String date) throws VersionException {
         try {
-            parseStringToDate(date);
+            convertToLocalDate(date);
             return true;
         } catch (RuntimeException | DataException e) {
             return false;
