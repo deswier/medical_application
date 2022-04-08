@@ -13,6 +13,7 @@ val DarkGray = Color(0xFF46b63)
 val LightGray = Color(
     0xFFe4e4e4
 )
+val Green = Color(0xFF038a11)
 val BluePastel = Color(0xFF758b96)
 val BeigePastel = Color(0xFFb7b3a8)
 val DarkBlue = Color(0xFF34454c)
