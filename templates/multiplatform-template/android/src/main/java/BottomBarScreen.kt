@@ -11,7 +11,7 @@ sealed class BottomBarScreen(
 ) {
     object Document : BottomBarScreen(
         route = "Document",
-        title = "Длкументы",
+        title = "Документы",
         icon = Icons.Default.Notifications
     )
 

@@ -7,15 +7,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
-import com.myapplication.tools.DateParser
 import screens.MainDestinations
 import screens.documentScreen
 import screens.showResultScreen
+import java.util.*
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
     val profile = remember {
-        Profile(FullName("Evgeniy", "Ignatenko"), DateParser.convertToLocalDate("20-02-2000"), 'M')
+        val cal = Calendar.getInstance()
+        cal.set(1999, 5, 13)
+        Profile(FullName("Alina", "Mikhaleva"), cal, 'F', null)
     }
     NavHost(
         navController = navController,

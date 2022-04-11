@@ -1,15 +1,12 @@
 package com.myapplication.model;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import androidx.compose.runtime.Composable;
 import com.myapplication.exception.DataException;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.Calendar;
 
 @Getter
 @Setter
@@ -17,10 +14,10 @@ import java.util.Date;
 public class Profile {
     public Bitmap photo;
     public FullName name;
-    public LocalDate dateOfBirth;
+    public Calendar dateOfBirth;
     public char gender;
 
-    public Profile(FullName name, LocalDate dateOfBirth, char gender) throws DataException {
+    public Profile(FullName name, Calendar dateOfBirth, char gender) throws DataException {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.photo = null;
@@ -34,7 +31,7 @@ public class Profile {
         else throw new DataException("Incorrect gender " + gender + ". Gender must be 'M' for male or 'F' for female");
     }
 
-    public Profile(FullName name, LocalDate dateOfBirth, char gender, Bitmap photo) throws DataException {
+    public Profile(FullName name, Calendar dateOfBirth, char gender, Bitmap photo) throws DataException {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.photo = photo;
@@ -54,5 +51,4 @@ public class Profile {
         if(gender=='M') return "Мужчина";
         else return "Женщина";
     }
-
 }

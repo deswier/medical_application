@@ -1,8 +1,4 @@
-import android.app.DatePickerDialog
-import android.content.Context
-import android.widget.DatePicker
 import androidx.compose.foundation.interaction.MutableInteractionSource
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +7,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -27,8 +24,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.myapplication.tools.DateParser
 import screens.outlinedTextFieldValidation
+import screens.tools.showDatePicker
 import theme.GrassGreen
 import java.util.*
 
@@ -65,7 +62,7 @@ fun newResultScreen(navController: NavHostController) {
                 var unit by rememberSaveable { mutableStateOf("") }
                 var referenceRange by rememberSaveable { mutableStateOf("") }
                 var comment by rememberSaveable { mutableStateOf("") }
-                var date by rememberSaveable { mutableStateOf("") }
+                var date by rememberSaveable { mutableStateOf(Calendar.getInstance()) }
                 val widthField = 350.dp
 
                 Column(
@@ -75,7 +72,12 @@ fun newResultScreen(navController: NavHostController) {
                         .padding(30.dp, 0.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    date = showDatePicker(LocalContext.current)
+                    date = showDatePicker(
+                        LocalContext.current,
+                        Modifier.fillMaxWidth(),
+                        Arrangement.Center,
+                        Alignment.CenterHorizontally
+                    )
 
                     outlinedTextFieldValidation(
                         value = test,
@@ -95,7 +97,6 @@ fun newResultScreen(navController: NavHostController) {
                             label = { Text(text = "Result") },
                             modifier = Modifier.width(200.dp)
                         )
-
 
                         OutlinedTextField(value = unit,
                             label = { Text("Unit") },
@@ -140,57 +141,6 @@ fun newResultScreen(navController: NavHostController) {
             }
         }
     }
-}
-
-@Composable
-fun showDatePicker(
-    context: Context
-): String {
-
-    val year: Int
-    val month: Int
-    val day: Int
-
-    val calendar = Calendar.getInstance()
-    year = calendar.get(Calendar.YEAR)
-    month = calendar.get(Calendar.MONTH)
-    day = calendar.get(Calendar.DAY_OF_MONTH)
-    calendar.time = Date()
-    val date = remember { mutableStateOf(DateParser.convertToString(Date())) }
-    val datePickerDialog = DatePickerDialog(
-        context,
-        { _: DatePicker, y: Int, m: Int, d: Int ->
-            date.value = DateParser.convertToString(DateParser.convertToDate(d, m, y))
-        }, year, month, day
-    )
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Spacer(modifier = Modifier.size(16.dp))
-        Row() {
-            OutlinedTextFieldFolder(
-                value = date.value.toString(),
-                onValueChange = {
-                },
-                enabled = false,
-                label = { Text(text = "Date") },
-            )
-            IconButton(
-                onClick = { datePickerDialog.show() },
-                Modifier.width(50.dp).padding(top=20.dp)
-            ) {
-                Icon(
-                    Icons.Filled.DateRange,
-                    "contentDescription",
-                )
-            }
-        }
-    }
-    return date.value
 }
 
 fun getEnabledSave(test: String, result: String, referenceRange: String): Boolean {

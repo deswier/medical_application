@@ -61,7 +61,7 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                         .padding(30.dp, 0.dp)
                         .verticalScroll(rememberScrollState()),
                 ) {
-                    var text = DateParser.convertToTextDate(card.date)
+                    var text = DateParser.convertToString(card.date)
                     if (card.lab != null && card.lab != "null")
                         text = text + ", " + card.lab
                     Text(
@@ -146,7 +146,7 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
 
                                     drawIntoCanvas {
                                         it.nativeCanvas.drawText(
-                                            DateParser.convertToStringWithoutYear(item.date),
+                                            DateParser.convertToString(item.date),
                                             x, 550F, textPaint
                                         )
                                     }
@@ -210,25 +210,25 @@ fun getSimilarResult(test: String): ArrayList<Note> {
     notes.add(
         Note(
             UUID.randomUUID(), "Invitro",
-            "HbA1c", Date(), "17", "4-20", "%", null
+            "HbA1c", Calendar.getInstance(), "17", "4-20", "%", null
         )
     )
     notes.add(
         Note(
             UUID.randomUUID(), "KDL",
-            "HbA1c", Date(), "23", "4-20", "%", null
+            "HbA1c", Calendar.getInstance(), "23", "4-20", "%", null
         )
     )
     notes.add(
         Note(
             UUID.randomUUID(), "Invitro",
-            "HbA1c", DateParser.convertToDate("10-10-2021"), "30", "4-20", "%", null
+            "HbA1c", Calendar.getInstance(), "30", "4-20", "%", null
         )
     )
     notes.add(
         Note(
             UUID.randomUUID(), "Invitro",
-            "HbA1c", Date(), "15", "4-20", "%", null
+            "HbA1c", Calendar.getInstance(), "15", "4-20", "%", null
         )
     )
     return notes
@@ -236,13 +236,9 @@ fun getSimilarResult(test: String): ArrayList<Note> {
 
 fun getCardOfResult(uuid: String): Note {
     //TODO with database
-//    return Note(
-//        UUID.fromString(uuid), "Invitro",
-//        "Fe", Date(), "9", "9-30.4", "mm/l", "i love banana"
-//    )
     return Note(
         UUID.fromString(uuid), "Invitro",
-        "Fe", Date(), "выявленно", "не выявленно", "", "i love banana"
+        "Fe", Calendar.getInstance(), "выявленно", "не выявленно", "", "i love banana"
     )
 }
 

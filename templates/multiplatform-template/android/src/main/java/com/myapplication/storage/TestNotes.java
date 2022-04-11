@@ -5,7 +5,10 @@ import com.myapplication.model.Note;
 import lombok.Getter;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.UUID;
 
 @Getter
 public class TestNotes implements Serializable {
@@ -17,27 +20,27 @@ public class TestNotes implements Serializable {
 
     private void addAll() throws DataException {
         notes.add(new Note(UUID.randomUUID(), "Invitro",
-                "Fe", new Date(), "9", "9-30.4", "mm/l", "null"));
+                "Fe", Calendar.getInstance(), "9", "9-30.4", "mm/l", "null"));
         notes.add(new Note(UUID.randomUUID(), "Invitro",
-                "HbA1c", new Date(), "7", "0 -6", "%", null));
+                "HbA1c", Calendar.getInstance(), "7", "0 -6", "%", null));
         notes.add(new Note(UUID.randomUUID(), "Invitro",
-                "HbA1c", new Date(), "7", "0-6-8", "%", null));
+                "HbA1c", Calendar.getInstance(), "7", "0-6-8", "%", null));
         notes.add(new Note(UUID.randomUUID(), "KDL",
-                "HbA1c", new Date(), "5.9", "0-6", "%", null));
+                "HbA1c", Calendar.getInstance(), "5.9", "0-6", "%", null));
         notes.add(new Note(UUID.randomUUID(), "Invitro",
-                "Fe", new Date(), "28.85", "9-30.4", "мкмоль/л", null));
+                "Fe", Calendar.getInstance(), "28.85", "9-30.4", "мкмоль/л", null));
         notes.add(new Note(UUID.randomUUID(), "Invitro",
-                "Билирубин общий", new Date(), "14.3", "3.4-20.5", "мкмоль/л", null));
+                "Билирубин общий", Calendar.getInstance(), "14.3", "3.4-20.5", "мкмоль/л", null));
         notes.add(new Note(UUID.randomUUID(), "Invitro",
-                "c-реактивный белок", new Date(), "выявленно", "не выявленно", "мкмоль/л", null));
+                "c-реактивный белок", Calendar.getInstance(), "выявленно", "не выявленно", "мкмоль/л", null));
         notes.add(new Note(UUID.randomUUID(), "Invitro",
-                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+                "c-реактивный белок", Calendar.getInstance(), "7", "не выявленно", "мкмоль/л", null));
         notes.add(new Note(UUID.randomUUID(), "Invitro",
-                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+                "c-реактивный белок", Calendar.getInstance(), "7", "не выявленно", "мкмоль/л", null));
         notes.add(new Note(UUID.randomUUID(), "Invitro",
-                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+                "c-реактивный белок", Calendar.getInstance(), "7", "не выявленно", "мкмоль/л", null));
         notes.add(new Note(UUID.randomUUID(), "Invitro",
-                "c-реактивный белок", new Date(), "7", "не выявленно", "мкмоль/л", null));
+                "c-реактивный белок", Calendar.getInstance(), "7", "не выявленно", "мкмоль/л", null));
     }
 
     public void add(Note n) throws DataException {

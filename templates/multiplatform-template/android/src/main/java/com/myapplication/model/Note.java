@@ -1,14 +1,11 @@
 package com.myapplication.model;
 
 import com.myapplication.exception.DataException;
-import com.myapplication.exception.VersionException;
-import com.myapplication.tools.DateParser;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -19,7 +16,7 @@ public class Note implements Serializable {
     @NotNull
     private String test;
     @NotNull
-    private Date date;
+    private Calendar date;
     @NotNull
     private String result;
     @NotNull
@@ -27,7 +24,7 @@ public class Note implements Serializable {
     private String unit;
     private String comment;
 
-    public Note(UUID uuid, String lab, @NotNull String test, @NotNull Date date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
+    public Note(UUID uuid, String lab, @NotNull String test, @NotNull Calendar date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
         this.uuid = uuid;
         this.lab = lab;
         this.test = test;
@@ -36,14 +33,6 @@ public class Note implements Serializable {
         this.referenceRange = referenceRange;
         this.unit = unit;
         this.comment = comment;
-    }
-
-    public Note(UUID uuid, String lab, @NotNull  String test,  @NotNull LocalDate date,  @NotNull String result,  @NotNull String referenceRange, String unit, String comment) throws VersionException {
-        new Note(uuid, lab, test, DateParser.convertToDate(date), result, referenceRange, unit, comment);
-    }
-
-    public Note(String lab, @NotNull  String test, @NotNull  LocalDate date,  @NotNull String result, @NotNull  String referenceRange, String unit, String comment) throws VersionException {
-        new Note(UUID.randomUUID(), lab, test, DateParser.convertToDate(date), result, referenceRange, unit, comment);
     }
 
     public boolean isNormalResult() throws DataException {
@@ -95,7 +84,7 @@ public class Note implements Serializable {
     }
 
     @NotNull
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 

@@ -6,15 +6,17 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.myapplication.exception.DataException
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
 import screens.profile.imagePicker
-import theme.*
-
+import theme.BluePastel
+import theme.DarkBlue
+import theme.GrassGreen
+import theme.imagePickerTheme
 
 @Composable
 fun profileScreen(profile: Profile) {
@@ -40,12 +42,14 @@ fun profileScreen(profile: Profile) {
     val paddingY = 200.dp
     var fName by rememberSaveable { mutableStateOf(profile.name.firstName) }
     var sName by rememberSaveable { mutableStateOf(profile.name.secondName) }
+    var date by rememberSaveable { mutableStateOf(profile.dateOfBirth) }
     val gender = remember { mutableStateOf(profile.genderToString) }
     Column(
 
         modifier = Modifier
             .fillMaxSize().padding(paddingX, paddingY),
     ) {
+        // date = showDatePicker(LocalContext.current)
         TextField(
             value = fName,
             singleLine = true,
@@ -84,7 +88,6 @@ fun profileScreen(profile: Profile) {
                 }
             }
         )
-
         Button(
             colors = ButtonDefaults.buttonColors(
                 disabledBackgroundColor = Color.White,
@@ -98,9 +101,8 @@ fun profileScreen(profile: Profile) {
                 if (gender.value == "Мужчина") gender.value = "Женщина"
                 else gender.value = "Мужчина"
             }
-
         ) {
-            Text(gender.value, fontFamily = FontFamily.SansSerif, fontSize = 20.sp)
+            Text(gender.value)
         }
 
         if (editProfile.value) {
@@ -127,6 +129,6 @@ fun profileScreen(profile: Profile) {
     }
 
     imagePickerTheme {
-        imagePicker(profile,editProfile.value)
+        imagePicker(profile, editProfile.value)
     }
 }
