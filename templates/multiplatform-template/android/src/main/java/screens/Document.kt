@@ -7,6 +7,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -15,37 +17,57 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.myapplication.storage.TestFolders
 
 @Composable
-fun documentScreen() {
-    val folders = remember { TestFolders() }
-    Column(
-        modifier = Modifier.fillMaxSize()) {
-        for (item in folders.folders) {
-            Column(
-                modifier = Modifier.fillMaxWidth().height(100.dp).clickable(onClick = {
-
-                })
-            ){
-                Text(
-                    item.name
-                )
+fun documentScreen(navController: NavHostController) {
+    Scaffold(
+        topBar = {
+            TopAppBar {
+                Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
+                Spacer(Modifier.weight(1f, true))
+                ProvideTextStyle(
+                    TextStyle(color = Color.White, fontSize = 8.sp)
+                ) {}
+                IconButton(
+                    onClick = {
+                        navController.navigate("adderResult")
+                    }) {
+                    Icon(
+                        Icons.Filled.Add,
+                        "contentDescription",
+                    )
+                }
             }
+        },
+    ) {
+        val folders = remember { TestFolders() }
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            for (item in folders.folders) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().height(100.dp).clickable(onClick = {
+                    })
+                ) {
+                    Row() {
+                        Icon(
+                            Icons.Filled.Email,
+                            "folderIcon",
+                        )
+                        Text(
+                            item.name, modifier = Modifier.padding(horizontal = 30.dp)
+                        )
+                    }
+                }
 
+            }
         }
     }
-
 }
-
-@Composable
-@Preview
-fun documentScreenPreview() {
-    documentScreen()
-}
-
 
 @Composable
 fun outlinedTextFieldValidation(

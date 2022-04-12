@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -25,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import screens.outlinedTextFieldValidation
-import screens.tools.showDatePicker
+import screens.tools.datePickerOutlined
 import theme.GrassGreen
 import java.util.*
 
@@ -47,7 +46,7 @@ fun newResultScreen(navController: NavHostController) {
                             "contentDescription",
                         )
                     }
-                    Text("Healthynetic", fontSize = 22.sp)
+                    Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
                     Spacer(Modifier.weight(1f, true))
 
                 }
@@ -72,11 +71,9 @@ fun newResultScreen(navController: NavHostController) {
                         .padding(30.dp, 0.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    date = showDatePicker(
+                    date = datePickerOutlined(
                         LocalContext.current,
-                        Modifier.fillMaxWidth(),
-                        Arrangement.Center,
-                        Alignment.CenterHorizontally
+                        date
                     )
 
                     outlinedTextFieldValidation(
@@ -155,7 +152,7 @@ fun fieldInput(
     OutlinedTextField(value = v,
         label = { Text(label) },
         singleLine = true,
-        modifier = Modifier.width(widthField).clip(RoundedCornerShape(3.dp)).padding(top=10.dp),
+        modifier = Modifier.width(widthField).clip(RoundedCornerShape(3.dp)).padding(top = 10.dp),
         onValueChange = {
             v = it
         })

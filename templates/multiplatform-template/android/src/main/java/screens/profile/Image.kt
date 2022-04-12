@@ -10,20 +10,23 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
 import com.myapplication.model.Profile
 
@@ -31,18 +34,19 @@ import com.myapplication.model.Profile
 fun imagePicker(profile: Profile, edit: Boolean) {
     var imageUrl by remember { mutableStateOf<Uri?>(null) }
     val bitmap = remember { mutableStateOf<Bitmap?>(profile.photo) }
-    val flagPhoto = remember { mutableStateOf(profile.photo != null) }
     val imageSize = 100.dp
+    val context = LocalContext.current
+    val flagPhoto = remember { mutableStateOf(profile.photo != null) }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imageUrl = uri
     }
-    Column(
+
+    Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight().fillMaxSize().padding(0.dp, 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
     ) {
         imageUrl?.let {
             if (Build.VERSION.SDK_INT < 28) {
@@ -50,53 +54,41 @@ fun imagePicker(profile: Profile, edit: Boolean) {
             } else {
                 val source = ImageDecoder.createSource(LocalContext.current.contentResolver, it)
                 bitmap.value = ImageDecoder.decodeBitmap(source)
-                profile.setPhoto(bitmap.value)
-                flagPhoto.value = true
-            }
-        }
-        if (flagPhoto.value) { //if  photo
-            bitmap.value?.let { bitmap ->
-                Image(
-                    bitmap = bitmap.asImageBitmap(),
-                    contentDescription = "Gallery Image",
-                    modifier = Modifier.size(imageSize)
-                        .clip(CircleShape)
-                        .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
-                )
             }
             profile.setPhoto(bitmap.value)
-
-            if (edit) {
-                Button(
-                    onClick = {
-                        imageUrl = null
-                        bitmap.value = null
-                        flagPhoto.value = false
-                        profile.setPhoto(null)
-                    }
-                ) {
-                    Text(
-                        text = "Delete photo", color = Color.White, fontSize = 10.sp,
-                    )
-                }
-            }
-        } else {
-            noPhoto(LocalContext.current)
+            flagPhoto.value = true
         }
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight().fillMaxSize().padding(0.dp, 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        if (edit) {
-            TextButton(
-                modifier = Modifier.requiredSize(imageSize).clip(CircleShape)
-                    .border(width = 3.dp, color = Color.LightGray, shape = CircleShape),
-                onClick = {
+        IconButton(
+            modifier = Modifier.size(imageSize).clip(CircleShape)
+                .border(width = 3.dp, color = Color.LightGray, shape = CircleShape),
+            onClick = {
+                if (edit) {
                     launcher.launch("image/*")
-                }) {
+                }
+            },
+        ) {
+            if (flagPhoto.value) { //if  photo
+                bitmap.value?.let { bitmap ->
+                    photo(bitmap, imageSize)
+                    profile.setPhoto(bitmap)
+                }
+            } else {
+                noPhoto(context)
+            }
+        }
+        if (edit) {
+            IconButton(
+                onClick = {
+                    imageUrl = null
+                    bitmap.value = null
+                    flagPhoto.value = false
+                    profile.setPhoto(null)
+                }
+            ) {
+                Icon(
+                    Icons.Filled.Delete,
+                    "contentDescription",
+                )
             }
         }
     }
@@ -115,4 +107,15 @@ fun noPhoto(context: Context) {
                 .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
         )
     }
+}
+
+@Composable
+fun photo(bitmap: Bitmap, imageSize: Dp) {
+    Image(
+        bitmap = bitmap.asImageBitmap(),
+        contentDescription = "Gallery Image",
+        modifier = Modifier.size(imageSize)
+            .clip(CircleShape)
+            .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
+    )
 }
