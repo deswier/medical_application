@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.myapplication.tools.DateParser
+import getWidthWithIconByEnabled
 import theme.BluePastel
 import theme.DarkBlue
 import java.util.*
@@ -30,11 +31,8 @@ fun datePickerTextField(
     width: Dp,
     label: String
 ): Calendar {
-    val widthPicker = 50.dp
-    val widthField: Dp = if (enabled) width - widthPicker
-    else {
-        width
-    }
+    val widthIcon = 50.dp
+    val widthField = getWidthWithIconByEnabled(enabled, width, widthIcon)
     val year: Int = calendar.get(Calendar.YEAR)
     val month: Int = calendar.get(Calendar.MONTH)
     val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
@@ -66,7 +64,7 @@ fun datePickerTextField(
         if (enabled) {
             IconButton(
                 onClick = { datePickerDialog.show() },
-                Modifier.width(widthPicker).padding(top = 20.dp)
+                Modifier.width(widthIcon).padding(top = 20.dp)
             ) {
                 Icon(
                     Icons.Filled.DateRange,

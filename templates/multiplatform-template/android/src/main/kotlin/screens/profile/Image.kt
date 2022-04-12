@@ -59,13 +59,10 @@ fun imagePicker(profile: Profile, edit: Boolean) {
             flagPhoto.value = true
         }
         IconButton(
-            modifier = Modifier.size(imageSize).clip(CircleShape)
-                .border(width = 3.dp, color = Color.LightGray, shape = CircleShape),
+            enabled = edit,
             onClick = {
-                if (edit) {
-                    launcher.launch("image/*")
-                }
-            },
+                launcher.launch("image/*")
+            }
         ) {
             if (flagPhoto.value) { //if  photo
                 bitmap.value?.let { bitmap ->

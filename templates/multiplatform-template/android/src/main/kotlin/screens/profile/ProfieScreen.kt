@@ -1,14 +1,18 @@
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.myapplication.exception.DataException
@@ -25,25 +29,35 @@ import tools.datePickerTextField
 fun profileScreen(profile: Profile) {
     val widthField = 300.dp
     val editProfile = remember { mutableStateOf(false) }
-    var fName by rememberSaveable { mutableStateOf(profile.name.firstName) }
-    var sName by rememberSaveable { mutableStateOf(profile.name.secondName) }
-    var date by rememberSaveable { mutableStateOf(profile.dateOfBirth) }
+    val fName = remember { mutableStateOf(profile.name.firstName) }
+    val sName = remember { mutableStateOf(profile.name.secondName) }
+    val date = remember { mutableStateOf(profile.dateOfBirth) }
     val gender = remember { mutableStateOf(profile.genderToString) }
+
+    var prevFName = profile.name.firstName
+    var prevSName = profile.name.secondName
+    var prevDate = profile.dateOfBirth
+    var prevGender = profile.genderToString
+
+
     Scaffold(
         topBar = {
             TopAppBar {
+                if (editProfile.value) {
+                    editProfile.value = iconButtonTopBar(editProfile.value, Icons.Filled.ArrowBack)
+                    fName.value = prevFName
+                    sName.value = prevSName
+                    date.value = prevDate
+                    gender.value = prevGender
+                }
                 Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
                 Spacer(Modifier.weight(1f, true))
-                IconButton(
-                    onClick = {
-                        editProfile.value = true
-                    },
-                    Modifier.width(50.dp)
-                ) {
-                    Icon(
-                        Icons.Filled.Edit,
-                        "contentDescription",
-                    )
+                if (!editProfile.value) {
+                    prevFName = fName.value
+                    prevSName = sName.value
+                    prevDate = date.value
+                    prevGender = gender.value
+                    editProfile.value = iconButtonTopBar(editProfile.value, Icons.Filled.Edit)
                 }
             }
         },
@@ -58,7 +72,7 @@ fun profileScreen(profile: Profile) {
             }
 
             TextField(
-                value = fName,
+                value = fName.value,
                 modifier = Modifier.width(widthField),
                 label = { Text(text = "Имя") },
                 singleLine = true,
@@ -71,15 +85,15 @@ fun profileScreen(profile: Profile) {
                 ),
                 onValueChange = {
                     try {
-                        fName = it
-                        profile.name = FullName(it, sName)
+                        fName.value = it
+                        profile.name = FullName(it, sName.value)
                     } catch (e: DataException) {
                         //TODO name incorrect
                     }
                 }
             )
             TextField(
-                value = (sName),
+                value = (sName.value),
                 modifier = Modifier.width(widthField),
                 label = { Text(text = "Фамилия") },
                 singleLine = true,
@@ -92,7 +106,7 @@ fun profileScreen(profile: Profile) {
                 ),
                 onValueChange = {
                     try {
-                        sName = it
+                        sName.value = it
                         profile.name = FullName(profile.name.firstName, it)
                     } catch (e: DataException) {
                         //TODO name incorrect
@@ -100,29 +114,45 @@ fun profileScreen(profile: Profile) {
                 }
             )
 
-            date = datePickerTextField(
+            date.value = datePickerTextField(
                 context = LocalContext.current,
-                calendar = date,
+                calendar = date.value,
                 enabled = editProfile.value,
                 width = widthField,
                 label = "Дата рождения"
             )
-
-            Button(
-                colors = ButtonDefaults.buttonColors(
-                    disabledBackgroundColor = Color.White,
-                    disabledContentColor = DarkBlue,
-                    backgroundColor = Color.White,
-                    contentColor = Color.Black
-                ),
-                elevation = null,
-                enabled = editProfile.value,
-                onClick = {
-                    if (gender.value == "Мужчина") gender.value = "Женщина"
-                    else gender.value = "Мужчина"
-                }
+            Row(
+                modifier = Modifier.width(widthField)
             ) {
-                Text(gender.value)
+                TextField(
+                    value = (gender.value),
+                    modifier = Modifier.width(getWidthWithIconByEnabled(editProfile.value, widthField, 50.dp)),
+                    label = { Text(text = "Пол") },
+                    singleLine = true,
+                    enabled = false,
+                    colors = TextFieldDefaults.textFieldColors(
+                        disabledTextColor = DarkBlue,
+                        backgroundColor = Color.White,
+                        focusedIndicatorColor = DarkBlue, //hide the indicator
+                        unfocusedIndicatorColor = BluePastel
+                    ),
+                    onValueChange = {
+                    }
+                )
+                if (editProfile.value) {
+                    IconButton(
+                        onClick = {
+                            if (gender.value == "Мужской") gender.value = "Женский"
+                            else gender.value = "Мужской"
+                        },
+                        Modifier.width(50.dp).padding(top = 20.dp)
+                    ) {
+                        Icon(
+                            Icons.Filled.Refresh,
+                            "contentDescription",
+                        )
+                    }
+                }
             }
 
             if (editProfile.value) {
@@ -138,7 +168,13 @@ fun profileScreen(profile: Profile) {
                         elevation = null,
                         enabled = editProfile.value,
                         onClick = {
-                            editProfile.value = false
+                            //todo update in database
+//                            editProfile.value = false
+//                            prevFName = fName.value
+//                            prevSName = sName.value
+//                            prevDate = date.value
+//                            prevGender = gender.value
+
                         }
                     ) {
                         Text("Save", fontStyle = FontStyle.Normal, fontSize = 15.sp)
@@ -146,5 +182,30 @@ fun profileScreen(profile: Profile) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun iconButtonTopBar(editProfile: Boolean, icon: ImageVector): Boolean {
+    var flagEdit by rememberSaveable { mutableStateOf(editProfile) }
+
+    IconButton(
+        onClick = {
+            flagEdit = !flagEdit
+        },
+        Modifier.width(50.dp)
+    ) {
+        Icon(
+            icon,
+            "contentDescription"
+        )
+    }
+    return flagEdit
+}
+
+fun getWidthWithIconByEnabled(enabled: Boolean, widthField: Dp, iconSize: Dp): Dp {
+    return if (enabled) widthField - iconSize
+    else {
+        widthField
     }
 }
