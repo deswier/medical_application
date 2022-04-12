@@ -1,4 +1,4 @@
-package screens
+package screens.result
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
@@ -25,6 +25,7 @@ import com.myapplication.model.Note
 import com.myapplication.tools.DateParser
 import theme.Green
 import theme.LightGray
+import tools.getResultColor
 import java.util.*
 
 @Composable
@@ -100,7 +101,7 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                                     val res = item.result.toFloat()
                                     y = canvasHeight - (delta * res - minus)
                                     drawCircle(
-                                        color = getResultColor(item),
+                                        color = getResultColor(card, Color.Green, Color.Red),
                                         center = Offset(x = x, y = y),
                                         radius = 15f
                                     )
@@ -159,7 +160,7 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                             } else {
 
                                 drawCircle(
-                                    color = getResultColor(card),
+                                    color = getResultColor(card, Color.Green, Color.Red),
                                     center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
                                     radius = size.minDimension / 2
                                 )
@@ -240,9 +241,4 @@ fun getCardOfResult(uuid: String): Note {
         UUID.fromString(uuid), "Invitro",
         "Fe", Calendar.getInstance(), "выявленно", "не выявленно", "", "i love banana"
     )
-}
-
-fun getResultColor(item: Note): Color {
-    return if (item.isNormalResult) Green
-    else Color.Red
 }

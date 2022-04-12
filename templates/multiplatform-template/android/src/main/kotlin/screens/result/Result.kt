@@ -1,3 +1,5 @@
+package screens.result
+
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +25,7 @@ import androidx.navigation.NavHostController
 import com.myapplication.model.Note
 import com.myapplication.storage.TestNotes
 import com.myapplication.tools.DateParser
-import screens.MainDestinations
+import tools.getResultColor
 
 @Composable
 fun resultScreen(navController: NavHostController) {
@@ -163,7 +165,7 @@ private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
                         "\n" + item.result + " " + item.unit + "\n",
                         fontSize = fontSize,
                         modifier = Modifier.width(fieldResultWidth),
-                        color = getResultColor(item)
+                        color = getResultColor(item, Color.Black, Color.Red),
                     )
                     emptyField(fieldEmptyWidth)
                     Text(
@@ -175,11 +177,6 @@ private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
             }
         }
     }
-}
-
-fun getResultColor(item: Note): Color {
-    return if (item.isNormalResult) Color.Black
-    else Color.Red
 }
 
 @Composable

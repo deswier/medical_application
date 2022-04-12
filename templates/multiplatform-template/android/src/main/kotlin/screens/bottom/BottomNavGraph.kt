@@ -1,3 +1,5 @@
+package screens.bottom
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
@@ -7,9 +9,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
-import screens.MainDestinations
+import newResultScreen
+import profileScreen
 import screens.documentScreen
-import screens.showResultScreen
+import screens.result.MainDestinations
+import screens.result.resultScreen
+import screens.result.showResultScreen
 import java.util.*
 
 @Composable
@@ -47,7 +52,7 @@ fun BottomNavGraph(navController: NavHostController) {
             val resultCardId = arguments.getString(MainDestinations.RESULT_CARD,null)
             if (resultCardId != null)
             //    CardDialog(resultCardId, upPress, {}, {})
-            showResultScreen(navController,resultCardId)
+                showResultScreen(navController,resultCardId)
         }
     }
 }

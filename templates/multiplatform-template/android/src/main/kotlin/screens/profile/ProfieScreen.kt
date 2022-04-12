@@ -15,11 +15,11 @@ import com.myapplication.exception.DataException
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
 import screens.profile.imagePicker
-import screens.tools.datePickerTextField
 import theme.BluePastel
 import theme.DarkBlue
 import theme.GrassGreen
 import theme.imagePickerTheme
+import tools.datePickerTextField
 
 @Composable
 fun profileScreen(profile: Profile) {
