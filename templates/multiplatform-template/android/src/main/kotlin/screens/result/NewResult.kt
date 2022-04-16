@@ -1,5 +1,5 @@
-//import com.myapplication.service.NoteService
-//import retrofit2.Retrofit
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -25,12 +25,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.myapplication.model.Note
+import com.myapplication.service.NoteService
+import retrofit2.Retrofit
 import screens.outlinedTextFieldValidation
 import theme.GrassGreen
 import tools.datePickerOutlined
+import java.time.LocalDate
 import java.util.*
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun newResultScreen(navController: NavHostController) {
     Column(
@@ -132,6 +137,23 @@ fun newResultScreen(navController: NavHostController) {
                         elevation = null,
                         enabled = getEnabledSave(test, result, referenceRange),
                         onClick = {
+                            val retrofit = Retrofit.Builder()
+                                .baseUrl("http://localhost:8080/")
+                                .build()
+
+                            val service: NoteService = retrofit.create(NoteService::class.java)
+                            service.createNote(
+                                Note(
+                                    UUID.randomUUID(),
+                                    lab,
+                                    test,
+                                    LocalDate.now(),
+                                    result,
+                                    referenceRange,
+                                    unit,
+                                    comment
+                                )
+                            )
                         }
                     ) {
                         Text("Save", fontStyle = FontStyle.Normal, fontSize = 15.sp)

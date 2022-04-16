@@ -1,10 +1,13 @@
 package com.myapplication.model;
 
+import android.os.Build;
 import com.myapplication.exception.DataException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Objects;
 import java.util.UUID;
@@ -16,7 +19,7 @@ public class Note implements Serializable {
     @NotNull
     private String test;
     @NotNull
-    private Calendar date;
+    LocalDate date;
     @NotNull
     private String result;
     @NotNull
@@ -25,6 +28,17 @@ public class Note implements Serializable {
     private String comment;
 
     public Note(UUID uuid, String lab, @NotNull String test, @NotNull Calendar date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
+        this.uuid = uuid;
+        this.lab = lab;
+        this.test = test;
+        this.date = convert(date);
+        this.result = result;
+        this.referenceRange = referenceRange;
+        this.unit = unit;
+        this.comment = comment;
+    }
+
+    public Note(UUID uuid, String lab, @NotNull String test, @NotNull LocalDate date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
         this.uuid = uuid;
         this.lab = lab;
         this.test = test;
@@ -62,7 +76,10 @@ public class Note implements Serializable {
         return lab + " " + test + " " + result + unit + " " + referenceRange + unit + "\n";
     }
 
-    public Note() {
+    private LocalDate convert(Calendar calendar) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId()).toLocalDate();
+        } else return null;
     }
 
     @NotNull
@@ -84,7 +101,7 @@ public class Note implements Serializable {
     }
 
     @NotNull
-    public Calendar getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
