@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.myapplication.model.Note
 import com.myapplication.storage.TestNotes
 import com.myapplication.tools.DateParser
+import screens.navigation.MainDestinations
 import tools.getResultColor
 
 @Composable

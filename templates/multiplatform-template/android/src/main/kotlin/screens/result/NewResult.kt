@@ -1,3 +1,5 @@
+//import com.myapplication.service.NoteService
+//import retrofit2.Retrofit
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -27,6 +29,7 @@ import screens.outlinedTextFieldValidation
 import theme.GrassGreen
 import tools.datePickerOutlined
 import java.util.*
+
 
 @Composable
 fun newResultScreen(navController: NavHostController) {
@@ -129,7 +132,6 @@ fun newResultScreen(navController: NavHostController) {
                         elevation = null,
                         enabled = getEnabledSave(test, result, referenceRange),
                         onClick = {
-
                         }
                     ) {
                         Text("Save", fontStyle = FontStyle.Normal, fontSize = 15.sp)

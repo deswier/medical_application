@@ -8,8 +8,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import screens.bottom.BottomBarScreen
-import screens.bottom.BottomNavGraph
+import screens.navigation.BottomBarScreen
+import screens.navigation.BottomNavGraph
 
 @Composable
 fun MainScreen() {
