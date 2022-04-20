@@ -1,4 +1,5 @@
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -30,6 +31,7 @@ import retrofit2.Retrofit
 import screens.outlinedTextFieldValidation
 import theme.color.getTextColor
 import theme.color.getTextFieldColors
+import theme.notActiveButton
 import theme.saveButton
 import tools.datePickerOutlined
 import java.time.LocalDate
@@ -72,7 +74,7 @@ fun newResultScreen(navController: NavHostController) {
                 var comment by rememberSaveable { mutableStateOf("") }
                 var date by rememberSaveable { mutableStateOf(Calendar.getInstance()) }
                 val widthField = 350.dp
-
+                val context = LocalContext.current
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
@@ -136,7 +138,8 @@ fun newResultScreen(navController: NavHostController) {
                             .fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = saveButton,
-                            contentColor = getTextColor()
+                            contentColor = getTextColor(),
+                            disabledBackgroundColor = notActiveButton
                         ),
                         elevation = null,
                         enabled = getEnabledSave(test, result, referenceRange),
@@ -158,9 +161,10 @@ fun newResultScreen(navController: NavHostController) {
                                     comment
                                 )
                             )
+                            Toast.makeText(context, "Добавлено", Toast.LENGTH_LONG).show()
                         }
                     ) {
-                        Text("Save", fontStyle = FontStyle.Normal, fontSize = 15.sp)
+                        Text("Сохранить", fontStyle = FontStyle.Normal, fontSize = 15.sp)
                     }
                 }
             }

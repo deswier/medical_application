@@ -21,3 +21,6 @@ val saveButton = Color(0xFF28784D)
 val border = Color(0xFF032436)
 val redText = Color(0xFFAA5239)
 val photoFrame = Color(0xFFD4826A) // photo frame
+val notActiveButton = Color(
+    0xFFBAB9B9
+)

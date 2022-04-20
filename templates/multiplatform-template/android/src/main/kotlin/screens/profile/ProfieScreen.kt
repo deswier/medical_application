@@ -1,3 +1,4 @@
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -50,121 +51,123 @@ fun profileScreen(profile: Profile) {
                         date.value = prevDate
                         gender.value = prevGender
                     }
-                Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
-                Spacer(Modifier.weight(1f, true))
-                if (!editProfile.value) {
-                    prevFName = fName.value
-                    prevSName = sName.value
-                    prevDate = date.value
-                    prevGender = gender.value
-                    editProfile.value = iconButtonTopBar(editProfile.value, Icons.Filled.Edit)
+                    Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
+                    Spacer(Modifier.weight(1f, true))
+                    if (!editProfile.value) {
+                        prevFName = fName.value
+                        prevSName = sName.value
+                        prevDate = date.value
+                        prevGender = gender.value
+                        editProfile.value = iconButtonTopBar(editProfile.value, Icons.Filled.Edit)
+                    }
                 }
-            }
-        },
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(top = 10.dp).width(widthField),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            },
         ) {
-            imagePickerTheme {
-                imagePicker(profile, editProfile.value)
-            }
-
-            TextField(
-                value = fName.value,
-                modifier = Modifier.width(widthField),
-                label = { Text(text = "Имя") },
-                singleLine = true,
-                enabled = editProfile.value,
-                colors = getTextFieldColors(),
-                onValueChange = {
-                    try {
-                        fName.value = it
-                        profile.name = FullName(it, sName.value)
-                    } catch (e: DataException) {
-                        //TODO name incorrect
-                    }
-                }
-            )
-            TextField(
-                value = (sName.value),
-                modifier = Modifier.width(widthField),
-                label = { Text(text = "Фамилия") },
-                singleLine = true,
-                enabled = editProfile.value,
-                colors = getTextFieldColors(),
-                onValueChange = {
-                    try {
-                        sName.value = it
-                        profile.name = FullName(profile.name.firstName, it)
-                    } catch (e: DataException) {
-                        //TODO name incorrect
-                    }
-                }
-            )
-
-            date.value = datePickerTextField(
-                context = LocalContext.current,
-                calendar = date.value,
-                enabled = editProfile.value,
-                width = widthField,
-                label = "Дата рождения"
-            )
-            Row(
-                modifier = Modifier.width(widthField)
+            Column(
+                modifier = Modifier.fillMaxSize().padding(top = 10.dp).width(widthField),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                imagePickerTheme {
+                    imagePicker(profile, editProfile.value)
+                }
+
                 TextField(
-                    value = (gender.value),
-                    modifier = Modifier.width(getWidthWithIconByEnabled(editProfile.value, widthField, 50.dp)),
-                    label = { Text(text = "Пол") },
+                    value = fName.value,
+                    modifier = Modifier.width(widthField),
+                    label = { Text(text = "Имя") },
                     singleLine = true,
-                    enabled = false,
+                    enabled = editProfile.value,
                     colors = getTextFieldColors(),
                     onValueChange = {
-                    }
-                )
-                if (editProfile.value) {
-                    IconButton(
-                        onClick = {
-                            if (gender.value == "Мужской") gender.value = "Женский"
-                            else gender.value = "Мужской"
-                        },
-                        Modifier.width(50.dp).padding(top = 20.dp)
-                    ) {
-                        Icon(
-                            Icons.Filled.Refresh,
-                            "contentDescription",
-                        )
-                    }
-                }
-            }
-
-            if (editProfile.value) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                {
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = saveButton,
-                            contentColor = getTextColor()
-                        ),
-                        elevation = null,
-                        enabled = editProfile.value,
-                        onClick = {
-                            //todo update in database
-                            editProfile.value = false
+                        try {
+                            fName.value = it
+                            profile.name = FullName(it, sName.value)
+                        } catch (e: DataException) {
+                            //TODO name incorrect
                         }
-                    ) {
-                        Text("Save", fontStyle = FontStyle.Normal, fontSize = 15.sp)
+                    }
+                )
+                TextField(
+                    value = (sName.value),
+                    modifier = Modifier.width(widthField),
+                    label = { Text(text = "Фамилия") },
+                    singleLine = true,
+                    enabled = editProfile.value,
+                    colors = getTextFieldColors(),
+                    onValueChange = {
+                        try {
+                            sName.value = it
+                            profile.name = FullName(profile.name.firstName, it)
+                        } catch (e: DataException) {
+                            //TODO name incorrect
+                        }
+                    }
+                )
+
+                date.value = datePickerTextField(
+                    context = LocalContext.current,
+                    calendar = date.value,
+                    enabled = editProfile.value,
+                    width = widthField,
+                    label = "Дата рождения"
+                )
+                Row(
+                    modifier = Modifier.width(widthField)
+                ) {
+                    TextField(
+                        value = (gender.value),
+                        modifier = Modifier.width(getWidthWithIconByEnabled(editProfile.value, widthField, 50.dp)),
+                        label = { Text(text = "Пол") },
+                        singleLine = true,
+                        enabled = false,
+                        colors = getTextFieldColors(),
+                        onValueChange = {
+                        }
+                    )
+                    if (editProfile.value) {
+                        IconButton(
+                            onClick = {
+                                if (gender.value == "Мужской") gender.value = "Женский"
+                                else gender.value = "Мужской"
+                            },
+                            Modifier.width(50.dp).padding(top = 20.dp)
+                        ) {
+                            Icon(
+                                Icons.Filled.Refresh,
+                                "contentDescription",
+                            )
+                        }
+                    }
+                }
+                val context = LocalContext.current
+                if (editProfile.value) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    {
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = saveButton,
+                                contentColor = getTextColor()
+                            ),
+                            elevation = null,
+                            enabled = editProfile.value,
+                            onClick = {
+                                //todo update in database
+                                editProfile.value = false
+                                Toast.makeText(context, "Сохранено", Toast.LENGTH_LONG).show()
+
+                            }
+                        ) {
+                            Text("Сохранить", fontStyle = FontStyle.Normal, fontSize = 15.sp)
+                        }
                     }
                 }
             }
-        }
         }
     }
 }

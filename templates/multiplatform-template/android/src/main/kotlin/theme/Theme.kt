@@ -1,9 +1,10 @@
 package theme
-import androidx.compose.foundation.isSystemInDarkTheme
+
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import theme.TypeTheme.Companion.isDarkTheme
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -18,7 +19,7 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun imagePickerTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isDarkTheme(),
     content: @Composable() () -> Unit
 ) {
     val colors = if (darkTheme) {
@@ -37,7 +38,7 @@ fun imagePickerTheme(
 
 @Composable
 fun bottomNavBarDemoTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {
