@@ -14,5 +14,5 @@ public interface NoteService {
     Call<Note> listRepos(@Path("uuid") UUID uuid);
 
     @POST("v1/note/")
-    Call<Note> createNote(@Body Note note);
+    Call<Void> createNote(@Body Note note);
 }

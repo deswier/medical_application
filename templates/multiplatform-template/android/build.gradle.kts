@@ -31,6 +31,7 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.20")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-jackson:2.9.0")
 
     annotationProcessor("org.projectlombok:lombok:1.18.22")
     annotationProcessor("org.projectlombok:lombok:1.18.22")
