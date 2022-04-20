@@ -1,5 +1,7 @@
 package screens.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
@@ -14,8 +16,10 @@ import profileScreen
 import screens.documentScreen
 import screens.result.resultScreen
 import screens.result.showResultScreen
+import theme.color.AppTheme
 import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
     val profile = remember {
@@ -31,10 +35,14 @@ fun BottomNavGraph(navController: NavHostController) {
             documentScreen(navController)
         }
         composable(route = BottomBarScreen.Result.route) {
-            resultScreen(navController)
+            AppTheme {
+                resultScreen(navController)
+            }
         }
         composable(route = BottomBarScreen.Profile.route) {
-            profileScreen(profile)
+            AppTheme {
+                profileScreen(profile)
+            }
         }
         composable(route = "adderResult") {
             newResultScreen(navController)

@@ -8,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
@@ -19,10 +18,11 @@ import com.myapplication.exception.DataException
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
 import screens.profile.imagePicker
-import theme.BluePastel
-import theme.DarkBlue
-import theme.GrassGreen
+import theme.color.AppTheme
+import theme.color.getTextColor
+import theme.color.getTextFieldColors
 import theme.imagePickerTheme
+import theme.saveButton
 import tools.datePickerTextField
 
 @Composable
@@ -39,17 +39,17 @@ fun profileScreen(profile: Profile) {
     var prevDate = profile.dateOfBirth
     var prevGender = profile.genderToString
 
-
-    Scaffold(
-        topBar = {
-            TopAppBar {
-                if (editProfile.value) {
-                    editProfile.value = iconButtonTopBar(editProfile.value, Icons.Filled.ArrowBack)
-                    fName.value = prevFName
-                    sName.value = prevSName
-                    date.value = prevDate
-                    gender.value = prevGender
-                }
+    AppTheme {
+        Scaffold(
+            topBar = {
+                TopAppBar {
+                    if (editProfile.value) {
+                        editProfile.value = iconButtonTopBar(editProfile.value, Icons.Filled.ArrowBack)
+                        fName.value = prevFName
+                        sName.value = prevSName
+                        date.value = prevDate
+                        gender.value = prevGender
+                    }
                 Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
                 Spacer(Modifier.weight(1f, true))
                 if (!editProfile.value) {
@@ -77,12 +77,7 @@ fun profileScreen(profile: Profile) {
                 label = { Text(text = "Имя") },
                 singleLine = true,
                 enabled = editProfile.value,
-                colors = TextFieldDefaults.textFieldColors(
-                    disabledTextColor = DarkBlue,
-                    backgroundColor = Color.White,
-                    focusedIndicatorColor = DarkBlue, //hide the indicator
-                    unfocusedIndicatorColor = BluePastel
-                ),
+                colors = getTextFieldColors(),
                 onValueChange = {
                     try {
                         fName.value = it
@@ -98,12 +93,7 @@ fun profileScreen(profile: Profile) {
                 label = { Text(text = "Фамилия") },
                 singleLine = true,
                 enabled = editProfile.value,
-                colors = TextFieldDefaults.textFieldColors(
-                    disabledTextColor = DarkBlue,
-                    backgroundColor = Color.White,
-                    focusedIndicatorColor = DarkBlue, //hide the indicator
-                    unfocusedIndicatorColor = BluePastel
-                ),
+                colors = getTextFieldColors(),
                 onValueChange = {
                     try {
                         sName.value = it
@@ -130,12 +120,7 @@ fun profileScreen(profile: Profile) {
                     label = { Text(text = "Пол") },
                     singleLine = true,
                     enabled = false,
-                    colors = TextFieldDefaults.textFieldColors(
-                        disabledTextColor = DarkBlue,
-                        backgroundColor = Color.White,
-                        focusedIndicatorColor = DarkBlue, //hide the indicator
-                        unfocusedIndicatorColor = BluePastel
-                    ),
+                    colors = getTextFieldColors(),
                     onValueChange = {
                     }
                 )
@@ -164,23 +149,22 @@ fun profileScreen(profile: Profile) {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = GrassGreen, contentColor = Color.Black),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = saveButton,
+                            contentColor = getTextColor()
+                        ),
                         elevation = null,
                         enabled = editProfile.value,
                         onClick = {
                             //todo update in database
-//                            editProfile.value = false
-//                            prevFName = fName.value
-//                            prevSName = sName.value
-//                            prevDate = date.value
-//                            prevGender = gender.value
-
+                            editProfile.value = false
                         }
                     ) {
                         Text("Save", fontStyle = FontStyle.Normal, fontSize = 15.sp)
                     }
                 }
             }
+        }
         }
     }
 }

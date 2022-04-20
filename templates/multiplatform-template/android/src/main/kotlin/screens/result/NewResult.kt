@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -29,7 +28,9 @@ import com.myapplication.model.Note
 import com.myapplication.service.NoteService
 import retrofit2.Retrofit
 import screens.outlinedTextFieldValidation
-import theme.GrassGreen
+import theme.color.getTextColor
+import theme.color.getTextFieldColors
+import theme.saveButton
 import tools.datePickerOutlined
 import java.time.LocalDate
 import java.util.*
@@ -61,7 +62,7 @@ fun newResultScreen(navController: NavHostController) {
             },
         ) {
             ProvideTextStyle(
-                TextStyle(color = Color.Black)
+                TextStyle(color = getTextColor())
             ) {
                 var lab by rememberSaveable { mutableStateOf("") }
                 var test by rememberSaveable { mutableStateOf("") }
@@ -133,7 +134,10 @@ fun newResultScreen(navController: NavHostController) {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = GrassGreen, contentColor = Color.Black),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = saveButton,
+                            contentColor = getTextColor()
+                        ),
                         elevation = null,
                         enabled = getEnabledSave(test, result, referenceRange),
                         onClick = {
@@ -206,9 +210,7 @@ fun OutlinedTextFieldFolder(
     maxLines: Int = Int.MAX_VALUE,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = MaterialTheme.shapes.small,
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
-        disabledTextColor = Color.Black
-    )
+    colors: TextFieldColors = getTextFieldColors()
 
 ): Boolean {
 

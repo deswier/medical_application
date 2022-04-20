@@ -1,3 +1,5 @@
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -10,25 +12,23 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import screens.navigation.BottomBarScreen
 import screens.navigation.BottomNavGraph
+import theme.color.AppTheme
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-
-    Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
-    ) {
-        BottomNavGraph(navController = navController)
+    AppTheme {
+        Scaffold(bottomBar = { BottomBar(navController = navController) }) {
+            BottomNavGraph(navController = navController)
+        }
     }
 }
-
 
 @Composable
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
-        BottomBarScreen.Document,
-        BottomBarScreen.Result,
-        BottomBarScreen.Profile
+        BottomBarScreen.Document, BottomBarScreen.Result, BottomBarScreen.Profile
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -36,9 +36,7 @@ fun BottomBar(navController: NavHostController) {
     BottomNavigation {
         screens.forEach { screen ->
             AddItem(
-                screen = screen,
-                currentDestination = currentDestination,
-                navController = navController
+                screen = screen, currentDestination = currentDestination, navController = navController
             )
         }
     }
@@ -46,29 +44,20 @@ fun BottomBar(navController: NavHostController) {
 
 @Composable
 fun RowScope.AddItem(
-    screen: BottomBarScreen,
-    currentDestination: NavDestination?,
-    navController: NavHostController
+    screen: BottomBarScreen, currentDestination: NavDestination?, navController: NavHostController
 ) {
-    BottomNavigationItem(
-        label = {
-            Text(text = screen.title)
-        },
-        icon = {
-            Icon(
-                imageVector = screen.icon,
-                contentDescription = "Navigation Icon"
-            )
-        },
-        selected = currentDestination?.hierarchy?.any {
-            it.route == screen.route
-        } == true,
-        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
-        onClick = {
-            navController.navigate(screen.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            }
+    BottomNavigationItem(label = {
+        Text(text = screen.title)
+    }, icon = {
+        Icon(
+            imageVector = screen.icon, contentDescription = "Navigation Icon"
+        )
+    }, selected = currentDestination?.hierarchy?.any {
+        it.route == screen.route
+    } == true, unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled), onClick = {
+        navController.navigate(screen.route) {
+            popUpTo(navController.graph.findStartDestination().id)
+            launchSingleTop = true
         }
-    )
+    })
 }
