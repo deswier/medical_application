@@ -25,7 +25,7 @@ import androidx.navigation.NavHostController
 import com.myapplication.storage.TestFolders
 import theme.DarkBlue
 
-Куimport theme.color.AppTheme
+import theme.color.AppTheme
 import theme.color.getBackgroundColor
 
 @Composable
