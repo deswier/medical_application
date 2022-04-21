@@ -1,5 +1,6 @@
 package screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.storage.TestFolders
 import theme.DarkBlue
+import theme.color.getBackgroundColor
 
 @Composable
 fun documentScreen(navController: NavHostController) {
@@ -39,6 +41,7 @@ fun documentScreen(navController: NavHostController) {
                     TextStyle(color = Color.White, fontSize = 8.sp)
                 ) {}
                 Box {
+                    Modifier.background(getBackgroundColor())
                     IconButton(
                         onClick = {
                             expanded.value = true

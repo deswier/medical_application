@@ -6,11 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import theme.BluePastel
 import theme.DarkBlue
-import theme.TypeTheme.Companion.isDarkTheme
+import theme.darkAndLightTheme.TypeTheme
 
 @Composable
 public fun getTextFieldColors(): TextFieldColors {
-    return if (isDarkTheme()) textFieldDarkTheme()
+    return if (TypeTheme.isDarkTheme()) textFieldDarkTheme()
     else textFieldLightTheme()
 }
 

@@ -2,12 +2,11 @@ package theme.color
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import theme.TypeTheme.Companion.isDarkTheme
+import theme.darkAndLightTheme.TypeTheme
 
 @Composable
-fun AppTheme(
-    darkTheme: Boolean = isDarkTheme(), content: @Composable () -> Unit
-) {
+fun AppTheme(content: @Composable () -> Unit) {
+    val darkTheme = TypeTheme.isDarkTheme()
     MaterialTheme(
         colors = if (darkTheme) DarkColorPalette else LightColorPalette,
         content = content

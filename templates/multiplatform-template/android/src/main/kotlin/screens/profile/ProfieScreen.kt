@@ -1,5 +1,6 @@
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -15,19 +16,23 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.myapplication.exception.DataException
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
+import screens.navigation.BottomBarScreen
 import screens.profile.imagePicker
 import theme.color.AppTheme
+import theme.color.VariationOfTheme
 import theme.color.getTextColor
 import theme.color.getTextFieldColors
+import theme.darkAndLightTheme.TypeTheme
 import theme.imagePickerTheme
 import theme.saveButton
 import tools.datePickerTextField
 
 @Composable
-fun profileScreen(profile: Profile) {
+fun profileScreen(navController: NavHostController, profile: Profile) {
     val widthField = 300.dp
     val editProfile = remember { mutableStateOf(false) }
     val fName = remember { mutableStateOf(profile.name.firstName) }
@@ -39,6 +44,8 @@ fun profileScreen(profile: Profile) {
     var prevSName = profile.name.secondName
     var prevDate = profile.dateOfBirth
     var prevGender = profile.genderToString
+    val type = TypeTheme.getTypeTheme()
+    val typeOfThemeApp = remember { mutableStateOf(type) }
 
     AppTheme {
         Scaffold(
@@ -148,8 +155,7 @@ fun profileScreen(profile: Profile) {
                     )
                     {
                         Button(
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = saveButton,
                                 contentColor = getTextColor()
@@ -160,13 +166,14 @@ fun profileScreen(profile: Profile) {
                                 //todo update in database
                                 editProfile.value = false
                                 Toast.makeText(context, "Сохранено", Toast.LENGTH_LONG).show()
-
                             }
                         ) {
                             Text("Сохранить", fontStyle = FontStyle.Normal, fontSize = 15.sp)
                         }
                     }
                 }
+                SimpleRadioButtonComponent(typeOfThemeApp.value, navController)
+
             }
         }
     }
@@ -194,5 +201,65 @@ fun getWidthWithIconByEnabled(enabled: Boolean, widthField: Dp, iconSize: Dp): D
     return if (enabled) widthField - iconSize
     else {
         widthField
+    }
+}
+
+@Composable
+fun setTheme(type: String) {
+    TypeTheme.setTheme(type)
+}
+
+
+@Composable
+fun SimpleRadioButtonComponent(typeOfThemeApp: String, navController: NavHostController) {
+    val dark = VariationOfTheme.dark
+    val light = VariationOfTheme.light
+    val system = VariationOfTheme.system
+    val radioOptions = listOf(dark, light, system)
+    var textType = remember { mutableStateOf(typeOfThemeApp) }
+    var bool = remember { mutableStateOf(false) }
+    setTheme(typeOfThemeApp)
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(typeOfThemeApp) }
+    Column(
+        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Column {
+            radioOptions.forEach { text ->
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .selectable(
+                            selected = (text == selectedOption),
+                            onClick = { onOptionSelected(text) }
+                        )
+                        .padding(horizontal = 16.dp)
+                ) {
+                    val context = LocalContext.current
+                    RadioButton(
+                        selected = (text == selectedOption), modifier = Modifier.padding(all = Dp(value = 8F)),
+                        onClick = {
+                            //todo save state of theme in file(xml?)
+                            onOptionSelected(text)
+                            textType.value = text
+                            bool.value = true
+                            //  Toast.makeText(context, textType, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                    Text(
+                        text = text,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                    if (bool.value) {
+                        setTheme(textType.value)
+                        Toast.makeText(LocalContext.current, textType.value, Toast.LENGTH_SHORT).show()
+                        bool.value = false
+
+                        navController.navigate(BottomBarScreen.Profile.route)
+                    }
+                }
+            }
+        }
     }
 }

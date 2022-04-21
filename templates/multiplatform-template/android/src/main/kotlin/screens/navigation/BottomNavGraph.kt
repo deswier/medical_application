@@ -32,7 +32,9 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = BottomBarScreen.Result.route
     ) {
         composable(route = BottomBarScreen.Document.route) {
-            documentScreen(navController)
+            AppTheme {
+                documentScreen(navController)
+            }
         }
         composable(route = BottomBarScreen.Result.route) {
             AppTheme {
@@ -41,7 +43,7 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarScreen.Profile.route) {
             AppTheme {
-                profileScreen(profile)
+                profileScreen(navController, profile)
             }
         }
         composable(route = "adderResult") {

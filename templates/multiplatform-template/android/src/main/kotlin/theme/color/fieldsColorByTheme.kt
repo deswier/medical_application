@@ -2,7 +2,7 @@ package theme.color
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import theme.TypeTheme
+import theme.darkAndLightTheme.TypeTheme
 
 @Composable
 public fun getTextColor(): Color {

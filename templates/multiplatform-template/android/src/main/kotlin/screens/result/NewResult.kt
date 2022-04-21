@@ -29,6 +29,7 @@ import com.myapplication.model.Note
 import com.myapplication.service.NoteService
 import retrofit2.Retrofit
 import screens.outlinedTextFieldValidation
+import theme.color.AppTheme
 import theme.color.getTextColor
 import theme.color.getTextFieldColors
 import theme.notActiveButton
@@ -41,130 +42,132 @@ import java.util.*
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun newResultScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        Scaffold(
-            topBar = {
-                TopAppBar {
-                    IconButton(
-                        onClick = { navController.popBackStack() },
-                        Modifier.width(50.dp)
-                    ) {
-                        Icon(
-                            Icons.Filled.ArrowBack,
-                            "contentDescription",
-                        )
-                    }
-                    Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
-                    Spacer(Modifier.weight(1f, true))
-
-                }
-            },
+    AppTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
         ) {
-            ProvideTextStyle(
-                TextStyle(color = getTextColor())
-            ) {
-                var lab by rememberSaveable { mutableStateOf("") }
-                var test by rememberSaveable { mutableStateOf("") }
-                var result by rememberSaveable { mutableStateOf("") }
-                var unit by rememberSaveable { mutableStateOf("") }
-                var referenceRange by rememberSaveable { mutableStateOf("") }
-                var comment by rememberSaveable { mutableStateOf("") }
-                var date by rememberSaveable { mutableStateOf(Calendar.getInstance()) }
-                val widthField = 350.dp
-                val context = LocalContext.current
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(widthField)
-                        .padding(30.dp, 0.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    date = datePickerOutlined(
-                        LocalContext.current,
-                        date
-                    )
-
-                    outlinedTextFieldValidation(
-                        value = test,
-                        onValueChange = {
-                            test = it
-                        },
-                        label = { Text(text = "Test name") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Row() {
-                        outlinedTextFieldValidation(
-                            value = result,
-                            onValueChange = {
-                                result = it
-                            },
-                            label = { Text(text = "Result") },
-                            modifier = Modifier.width(200.dp)
-                        )
-
-                        OutlinedTextField(value = unit,
-                            label = { Text("Unit") },
-                            singleLine = true,
-                            modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 8.dp),
-                            onValueChange = {
-                                unit = it
-                            })
-                    }
-                    Row() {
-                        outlinedTextFieldValidation(
-                            value = referenceRange,
-                            onValueChange = {
-                                referenceRange = it
-                            },
-                            label = { Text(text = "Reference range") },
-                            modifier = Modifier.width(200.dp)
-                        )
-                        OutlinedTextField(value = unit,
-                            enabled = false,
-                            singleLine = true,
-                            modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 15.dp),
-                            onValueChange = {
-                            })
-                    }
-
-                    lab = fieldInput(lab, "Lab", widthField)
-                    comment = fieldInput(comment, "Comment", widthField)
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = saveButton,
-                            contentColor = getTextColor(),
-                            disabledBackgroundColor = notActiveButton
-                        ),
-                        elevation = null,
-                        enabled = getEnabledSave(test, result, referenceRange),
-                        onClick = {
-                            val retrofit = Retrofit.Builder()
-                                .baseUrl("http://localhost:8080/")
-                                .build()
-
-                            val service: NoteService = retrofit.create(NoteService::class.java)
-                            service.createNote(
-                                Note(
-                                    UUID.randomUUID(),
-                                    lab,
-                                    test,
-                                    LocalDate.now(),
-                                    result,
-                                    referenceRange,
-                                    unit,
-                                    comment
-                                )
+            Scaffold(
+                topBar = {
+                    TopAppBar {
+                        IconButton(
+                            onClick = { navController.popBackStack() },
+                            Modifier.width(50.dp)
+                        ) {
+                            Icon(
+                                Icons.Filled.ArrowBack,
+                                "contentDescription",
                             )
-                            Toast.makeText(context, "Добавлено", Toast.LENGTH_LONG).show()
                         }
+                        Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
+                        Spacer(Modifier.weight(1f, true))
+
+                    }
+                },
+            ) {
+                ProvideTextStyle(
+                    TextStyle(color = getTextColor())
+                ) {
+                    var lab by rememberSaveable { mutableStateOf("") }
+                    var test by rememberSaveable { mutableStateOf("") }
+                    var result by rememberSaveable { mutableStateOf("") }
+                    var unit by rememberSaveable { mutableStateOf("") }
+                    var referenceRange by rememberSaveable { mutableStateOf("") }
+                    var comment by rememberSaveable { mutableStateOf("") }
+                    var date by rememberSaveable { mutableStateOf(Calendar.getInstance()) }
+                    val widthField = 350.dp
+                    val context = LocalContext.current
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(widthField)
+                            .padding(30.dp, 0.dp)
+                            .verticalScroll(rememberScrollState())
                     ) {
-                        Text("Сохранить", fontStyle = FontStyle.Normal, fontSize = 15.sp)
+                        date = datePickerOutlined(
+                            LocalContext.current,
+                            date
+                        )
+
+                        outlinedTextFieldValidation(
+                            value = test,
+                            onValueChange = {
+                                test = it
+                            },
+                            label = { Text(text = "Test name") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Row() {
+                            outlinedTextFieldValidation(
+                                value = result,
+                                onValueChange = {
+                                    result = it
+                                },
+                                label = { Text(text = "Result") },
+                                modifier = Modifier.width(200.dp)
+                            )
+
+                            OutlinedTextField(value = unit,
+                                label = { Text("Unit") },
+                                singleLine = true,
+                                modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 8.dp),
+                                onValueChange = {
+                                    unit = it
+                                })
+                        }
+                        Row() {
+                            outlinedTextFieldValidation(
+                                value = referenceRange,
+                                onValueChange = {
+                                    referenceRange = it
+                                },
+                                label = { Text(text = "Reference range") },
+                                modifier = Modifier.width(200.dp)
+                            )
+                            OutlinedTextField(value = unit,
+                                enabled = false,
+                                singleLine = true,
+                                modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 15.dp),
+                                onValueChange = {
+                                })
+                        }
+
+                        lab = fieldInput(lab, "Lab", widthField)
+                        comment = fieldInput(comment, "Comment", widthField)
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = saveButton,
+                                contentColor = getTextColor(),
+                                disabledBackgroundColor = notActiveButton
+                            ),
+                            elevation = null,
+                            enabled = getEnabledSave(test, result, referenceRange),
+                            onClick = {
+                                val retrofit = Retrofit.Builder()
+                                    .baseUrl("http://localhost:8080/")
+                                    .build()
+
+                                val service: NoteService = retrofit.create(NoteService::class.java)
+                                service.createNote(
+                                    Note(
+                                        UUID.randomUUID(),
+                                        lab,
+                                        test,
+                                        LocalDate.now(),
+                                        result,
+                                        referenceRange,
+                                        unit,
+                                        comment
+                                    )
+                                )
+                                Toast.makeText(context, "Добавлено", Toast.LENGTH_LONG).show()
+                            }
+                        ) {
+                            Text("Сохранить", fontStyle = FontStyle.Normal, fontSize = 15.sp)
+                        }
                     }
                 }
             }
