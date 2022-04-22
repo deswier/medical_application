@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -33,20 +34,21 @@ import tools.getResultColor
 import tools.getTextColor
 
 @Composable
-fun resultScreen(navController: NavHostController) {
+fun resultScreen(navController: NavHostController, results: ListOfNotes) {
+    val note = remember { results }
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val note = remember { ListOfNotes }
-
+        var contex = LocalContext.current
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
         ) {
+//            Toast.makeText(contex, note.notes.toString(), Toast.LENGTH_LONG).show()
             var search by rememberSaveable { mutableStateOf("") }
-            var searchRes by rememberSaveable { mutableStateOf(note.searchNote(search)) }
+            var searchRes by rememberSaveable { mutableStateOf(note.notes) }
 
             Scaffold(
                 topBar = {
@@ -155,7 +157,7 @@ private fun fieldRes(note: List<Note>, navController: NavHostController) {
                 Row(
                     modifier = Modifier.fillMaxWidth().clickable(onClick = {
 
-                    val uuid=item.uuid.toString()
+                        val uuid = item.uuid.toString()
                         navController.navigate("${MainDestinations.SHOW_RESULT}/$uuid")
                     }).padding(fieldEmptyWidth, 0.dp)
                 ) {

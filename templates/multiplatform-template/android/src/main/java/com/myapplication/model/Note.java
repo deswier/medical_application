@@ -26,6 +26,10 @@ public class Note implements Serializable {
     private String unit;
     private String comment;
 
+    public Note() {
+
+    }
+
     public Note(UUID uuid, String lab, @NotNull String test, @NotNull Date date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
         this.uuid = uuid;
         this.lab = lab;

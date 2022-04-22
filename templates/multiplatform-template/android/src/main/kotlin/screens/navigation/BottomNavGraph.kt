@@ -1,9 +1,11 @@
 package screens.navigation
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -17,6 +19,7 @@ import screens.documentScreen
 import screens.result.resultScreen
 import screens.result.showResultScreen
 import theme.color.appTheme
+import tools.ListOfNotes
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -27,6 +30,11 @@ fun BottomNavGraph(navController: NavHostController) {
         cal.set(1999, 5, 13)
         Profile(FullName("Alina", "Mikhaleva"), cal, 'F', null)
     }
+    val results = remember { ListOfNotes }
+
+    val contex = LocalContext.current
+    Toast.makeText(contex, results.notes.toString(), Toast.LENGTH_LONG).show()
+
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Result.route
@@ -38,7 +46,7 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarScreen.Result.route) {
             appTheme {
-                resultScreen(navController)
+                resultScreen(navController, results)
             }
         }
         composable(route = BottomBarScreen.Profile.route) {

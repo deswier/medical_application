@@ -9,7 +9,7 @@ object ListOfNotes {
     public var notes: MutableList<Note> = mutableListOf()
 
     init {
-        RequestFactory.noteService.allNotes().call(onSuccess = { v1, v2 ->
+        RequestFactory.noteService.allNotes().call(onSuccess = { _, v2 ->
             v2.body()?.forEach {
                 add(it)
             }
