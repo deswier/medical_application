@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.myapplication.model.Profile
+import theme.color.photoFrame
 
 @Composable
 fun imagePicker(profile: Profile, edit: Boolean) {
@@ -101,7 +102,7 @@ fun noPhoto(context: Context) {
             contentDescription = "Gallery Image",
             modifier = Modifier.size(100.dp)
                 .clip(CircleShape)
-                .border(width = 3.dp, color = Color.LightGray, shape = CircleShape)
+                .border(width = 3.dp, color = photoFrame, shape = CircleShape)
         )
     }
 }

@@ -1,5 +1,7 @@
 package screens.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
@@ -14,8 +16,10 @@ import profileScreen
 import screens.documentScreen
 import screens.result.resultScreen
 import screens.result.showResultScreen
+import theme.color.appTheme
 import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
     val profile = remember {
@@ -28,40 +32,23 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = BottomBarScreen.Result.route
     ) {
         composable(route = BottomBarScreen.Document.route) {
-            documentScreen(navController)
+            appTheme {
+                documentScreen(navController)
+            }
         }
         composable(route = BottomBarScreen.Result.route) {
-            resultScreen(navController)
+            appTheme {
+                resultScreen(navController)
+            }
         }
         composable(route = BottomBarScreen.Profile.route) {
-            profileScreen(profile)
+            appTheme {
+                profileScreen(navController, profile)
+            }
         }
         composable(route = "adderResult") {
             newResultScreen(navController)
         }
-
-//        composable(route = "adderFolder") {
-//            folderFromDocumentScreen(navController)
-//        }
-//
-//        composable(route = "adderFile") {
-//            newResultScreen(navController)
-//        }
-
-//        composable(
-//            route = "${MainDestinations.OPEN_FOLDER}/{${MainDestinations.PARENT_FOLDER}}",
-//            arguments = listOf(navArgument(MainDestinations.PARENT_FOLDER) {
-//                type =
-//                    NavType.StringType
-//                //here will be uuid
-//            })
-//        ) { backStackEntry ->
-//            val arguments = requireNotNull(backStackEntry.arguments)
-//            val resultCardId = arguments.getString(MainDestinations.RESULT_CARD,null)
-//            if (resultCardId != null)
-//            //    CardDialog(resultCardId, upPress, {}, {})
-//                showResultScreen(navController,resultCardId)
-//        }
 
         composable(
             route = "${MainDestinations.SHOW_RESULT}/{${MainDestinations.RESULT_CARD}}",
@@ -73,8 +60,7 @@ fun BottomNavGraph(navController: NavHostController) {
             val arguments = requireNotNull(backStackEntry.arguments)
             val resultCardId = arguments.getString(MainDestinations.RESULT_CARD, null)
             if (resultCardId != null)
-            //    CardDialog(resultCardId, upPress, {}, {})
-                showResultScreen(navController,resultCardId)
+                showResultScreen(navController, resultCardId)
         }
     }
 }

@@ -1,26 +1,26 @@
 package tools
 
-import OutlinedTextFieldFolder
 import android.app.DatePickerDialog
 import android.content.Context
 import android.widget.DatePicker
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.myapplication.tools.DateParser
 import getWidthWithIconByEnabled
-import theme.BluePastel
-import theme.DarkBlue
+import theme.color.getTextFieldColors
 import java.util.*
 
 @Composable
@@ -53,12 +53,7 @@ fun datePickerTextField(
             },
             modifier = Modifier.width(widthField),
             enabled = false,
-            colors = TextFieldDefaults.textFieldColors(
-                disabledTextColor = DarkBlue,
-                backgroundColor = Color.White,
-                focusedIndicatorColor = DarkBlue, //hide the indicator
-                unfocusedIndicatorColor = BluePastel
-            ),
+            colors = getTextFieldColors(),
             label = { Text(text = label) },
         )
         if (enabled) {
@@ -96,12 +91,13 @@ fun datePickerOutlined(
         }, year, month, day
     )
     Row() {
-        OutlinedTextFieldFolder(
+        outlinedTextFieldFolder(
             value = DateParser.convertToString(date.value),
             onValueChange = {
             },
             enabled = false,
             label = { Text(text = "Date") },
+            colors = getTextFieldColors()
         )
         IconButton(
             onClick = { datePickerDialog.show() },

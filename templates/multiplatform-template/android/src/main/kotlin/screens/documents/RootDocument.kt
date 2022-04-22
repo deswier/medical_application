@@ -1,5 +1,6 @@
 package screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -22,134 +23,143 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.storage.TestFolders
-import theme.DarkBlue
+import theme.color.DarkBlue
+
+import theme.color.appTheme
+import tools.getBackgroundColor
 
 @Composable
 fun documentScreen(navController: NavHostController) {
-    var expanded = remember { mutableStateOf(false) }
+    val expanded = remember { mutableStateOf(false) }
     val openDialog = remember { mutableStateOf(false) }
     val folders = remember { TestFolders() }
-
-    Scaffold(
-        topBar = {
-            TopAppBar {
-                Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
-                Spacer(Modifier.weight(1f, true))
-                ProvideTextStyle(
-                    TextStyle(color = Color.White, fontSize = 8.sp)
-                ) {}
-                Box {
-                    IconButton(
-                        onClick = {
-                            expanded.value = true
-                        }) { Icon(Icons.Filled.Add, "contentDescription") }
-                    DropdownMenu(
-                        expanded = expanded.value,
-                        onDismissRequest = { expanded.value = false }
-                    ) {
-                        Text(
-                            "Добавить папку",
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(10.dp).clickable(onClick = {
-                                openDialog.value = true
-                            })
-                        )
-                        Text(
-                            "Добавить файл",
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(10.dp).clickable(onClick = {})
-                        )
-                        Divider()
-                        Text("Настройки", fontSize = 18.sp, modifier = Modifier.padding(10.dp).clickable(onClick = {}))
+    appTheme {
+        Scaffold(
+            topBar = {
+                TopAppBar {
+                    Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
+                    Spacer(Modifier.weight(1f, true))
+                    ProvideTextStyle(
+                        TextStyle(color = Color.White, fontSize = 8.sp)
+                    ) {}
+                    Box {
+                        Modifier.background(getBackgroundColor())
+                        IconButton(
+                            onClick = {
+                                expanded.value = true
+                            }) { Icon(Icons.Filled.Add, "contentDescription") }
+                        DropdownMenu(
+                            expanded = expanded.value,
+                            onDismissRequest = { expanded.value = false }
+                        ) {
+                            Text(
+                                "Добавить папку",
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(10.dp).clickable(onClick = {
+                                    openDialog.value = true
+                                })
+                            )
+                            Text(
+                                "Добавить файл",
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(10.dp).clickable(onClick = {})
+                            )
+                            Divider()
+                            Text(
+                                "Настройки",
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(10.dp).clickable(onClick = {})
+                            )
+                        }
                     }
                 }
-            }
-        },
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+            },
         ) {
-            if (openDialog.value) {
-                val folderName = remember { mutableStateOf("") }
-                AlertDialog(
-                    modifier = Modifier.width(300.dp),
-                    onDismissRequest = {
-                        openDialog.value = false
-                    },
-                    title = { Text(text = "Добавить папку") },
-                    text = {
-                        Column {
-                            Text("Введите название папки")
-                            outlinedTextFieldValidation(
-                                value = folderName.value,
-                                onValueChange = {
-                                    folderName.value = it
-                                },
-                            )
-                        }
-                    },
-                    buttons = {
-
-                        Row(modifier = Modifier.fillMaxWidth()) {
-
-                            Button(
-                                modifier = Modifier.padding(horizontal = 20.dp),
-                                onClick = {
-                                    if (folderName.value != "") {
-                                        folders.add(folderName.value)
-                                        openDialog.value = false
-                                    }
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    disabledBackgroundColor = Color.White,
-                                    disabledContentColor = DarkBlue,
-                                    backgroundColor = Color.White,
-                                    contentColor = Color.Black
-                                ),
-                                elevation = null
-
-                            ) {
-                                Text("Добавить")
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                if (openDialog.value) {
+                    val folderName = remember { mutableStateOf("") }
+                    AlertDialog(
+                        modifier = Modifier.width(300.dp),
+                        onDismissRequest = {
+                            openDialog.value = false
+                        },
+                        title = { Text(text = "Добавить папку") },
+                        text = {
+                            Column {
+                                Text("Введите название папки")
+                                outlinedTextFieldValidation(
+                                    value = folderName.value,
+                                    onValueChange = {
+                                        folderName.value = it
+                                    },
+                                )
                             }
+                        },
+                        buttons = {
 
-                            Button(
-                                modifier = Modifier.padding(horizontal = 15.dp),
-                                onClick = { openDialog.value = false },
-                                colors = ButtonDefaults.buttonColors(
-                                    disabledBackgroundColor = Color.White,
-                                    disabledContentColor = DarkBlue,
-                                    backgroundColor = Color.White,
-                                    contentColor = MaterialTheme.colors.error
-                                ),
-                                elevation = null
-                            )
-                            {
-                                Text("Отменить")
+                            Row(modifier = Modifier.fillMaxWidth()) {
+
+                                Button(
+                                    modifier = Modifier.padding(horizontal = 20.dp),
+                                    onClick = {
+                                        if (folderName.value != "") {
+                                            folders.add(folderName.value)
+                                            openDialog.value = false
+                                        }
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        disabledBackgroundColor = Color.White,
+                                        disabledContentColor = DarkBlue,
+                                        backgroundColor = Color.White,
+                                        contentColor = Color.Black
+                                    ),
+                                    elevation = null
+
+                                ) {
+                                    Text("Добавить")
+                                }
+
+                                Button(
+                                    modifier = Modifier.padding(horizontal = 15.dp),
+                                    onClick = { openDialog.value = false },
+                                    colors = ButtonDefaults.buttonColors(
+                                        disabledBackgroundColor = Color.White,
+                                        disabledContentColor = DarkBlue,
+                                        backgroundColor = Color.White,
+                                        contentColor = MaterialTheme.colors.error
+                                    ),
+                                    elevation = null
+                                )
+                                {
+                                    Text("Отменить")
+                                }
                             }
                         }
-                    }
-                )
-            }
-            for (item in folders.folders) {
-                Column(
-                    modifier = Modifier.fillMaxWidth().height(100.dp).clickable(onClick = {
-                        //todo navigate
-                        navController.navigate("")
-
-                        //folderFromDocumentScreen(navController, item)
-                    })
-                ) {
-                    Row() {
-                        Icon(
-                            Icons.Filled.Email,
-                            "folderIcon",
-                        )
-                        Text(
-                            item.name, modifier = Modifier.padding(horizontal = 30.dp)
-                        )
-                    }
+                    )
                 }
+                for (item in folders.folders) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth().height(100.dp).clickable(onClick = {
+                            //todo navigate
+                            navController.navigate("")
 
+                            //folderFromDocumentScreen(navController, item)
+                        })
+                    ) {
+                        Row() {
+                            Icon(
+                                Icons.Filled.Email,
+                                "folderIcon",
+                            )
+                            Text(
+                                item.name, modifier = Modifier.padding(horizontal = 30.dp)
+                            )
+                        }
+                    }
+
+                }
             }
         }
     }

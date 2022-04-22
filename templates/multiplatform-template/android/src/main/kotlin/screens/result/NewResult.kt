@@ -1,27 +1,24 @@
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,104 +27,109 @@ import com.myapplication.model.Note
 import factory.RequestFactory.noteService
 import factory.call
 import screens.outlinedTextFieldValidation
-import theme.GrassGreen
+import theme.color.appTheme
+import theme.color.notActiveButton
+import theme.color.saveButton
 import tools.datePickerOutlined
+import tools.getTextColor
+import java.time.LocalDate
 import java.util.*
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun newResultScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        Scaffold(
-            topBar = {
-                TopAppBar {
-                    IconButton(
-                        onClick = { navController.popBackStack() },
-                        Modifier.width(50.dp)
-                    ) {
-                        Icon(
-                            Icons.Filled.ArrowBack,
-                            "contentDescription",
-                        )
-                    }
-                    Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
-                    Spacer(Modifier.weight(1f, true))
-
-                }
-            },
+    appTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
         ) {
-            ProvideTextStyle(
-                TextStyle(color = Color.Black)
+            Scaffold(
+                topBar = {
+                    TopAppBar {
+                        IconButton(
+                            onClick = { navController.popBackStack() },
+                            Modifier.width(50.dp)
+                        ) {
+                            Icon(
+                                Icons.Filled.ArrowBack,
+                                "contentDescription",
+                            )
+                        }
+                        Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
+                        Spacer(Modifier.weight(1f, true))
+
+                    }
+                },
             ) {
-                var lab by rememberSaveable { mutableStateOf("") }
-                var test by rememberSaveable { mutableStateOf("") }
-                var result by rememberSaveable { mutableStateOf("") }
-                var unit by rememberSaveable { mutableStateOf("") }
-                var referenceRange by rememberSaveable { mutableStateOf("") }
-                var comment by rememberSaveable { mutableStateOf("") }
-                var date by rememberSaveable { mutableStateOf(Calendar.getInstance()) }
-                val widthField = 350.dp
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(widthField)
-                        .padding(30.dp, 0.dp)
-                        .verticalScroll(rememberScrollState())
+                ProvideTextStyle(
+                    TextStyle(color = getTextColor())
                 ) {
-                    date = datePickerOutlined(
-                        LocalContext.current,
-                        date
-                    )
-
-                    outlinedTextFieldValidation(
-                        value = test,
-                        onValueChange = {
-                            test = it
-                        },
-                        label = { Text(text = "Test name") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Row() {
-                        outlinedTextFieldValidation(
-                            value = result,
-                            onValueChange = {
-                                result = it
-                            },
-                            label = { Text(text = "Result") },
-                            modifier = Modifier.width(200.dp)
+                    var lab by rememberSaveable { mutableStateOf("") }
+                    var test by rememberSaveable { mutableStateOf("") }
+                    var result by rememberSaveable { mutableStateOf("") }
+                    var unit by rememberSaveable { mutableStateOf("") }
+                    var referenceRange by rememberSaveable { mutableStateOf("") }
+                    var comment by rememberSaveable { mutableStateOf("") }
+                    var date by rememberSaveable { mutableStateOf(Calendar.getInstance()) }
+                    val widthField = 350.dp
+                    val context = LocalContext.current
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(widthField)
+                            .padding(30.dp, 0.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        date = datePickerOutlined(
+                            LocalContext.current,
+                            date
                         )
 
-                        OutlinedTextField(value = unit,
-                            label = { Text("Unit") },
-                            singleLine = true,
-                            modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 8.dp),
-                            onValueChange = {
-                                unit = it
-                            })
-                    }
-                    Row() {
                         outlinedTextFieldValidation(
-                            value = referenceRange,
+                            value = test,
                             onValueChange = {
-                                referenceRange = it
+                                test = it
                             },
-                            label = { Text(text = "Reference range") },
-                            modifier = Modifier.width(200.dp)
+                            label = { Text(text = "Test name") },
+                            modifier = Modifier.fillMaxWidth()
                         )
-                        OutlinedTextField(value = unit,
-                            enabled = false,
-                            singleLine = true,
-                            modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 15.dp),
-                            onValueChange = {
-                            })
-                    }
 
+
+                              Row() {
+                            outlinedTextFieldValidation(
+                                value = result,
+                                onValueChange = {
+                                    result = it
+                                },
+                                label = { Text(text = "Result") },
+                                modifier = Modifier.width(200.dp)
+                            )
+
+                            OutlinedTextField(value = unit,
+                                label = { Text("Unit") },
+                                singleLine = true,
+                                modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 8.dp),
+                                onValueChange = {
+                                    unit = it
+                                })
+                        }
+                        Row() {
+                            outlinedTextFieldValidation(
+                                value = referenceRange,
+                                onValueChange = {
+                                    referenceRange = it
+                                },
+                                label = { Text(text = "Reference range") },
+                                modifier = Modifier.width(200.dp)
+                            )
+                            OutlinedTextField(value = unit,
+                                enabled = false,
+                                singleLine = true,
+                                modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 15.dp),
+                                onValueChange = {
+                                })
+                        }    
                     lab = fieldInput(lab, "Lab", widthField)
                     comment = fieldInput(comment, "Comment", widthField)
                     Button(
@@ -151,9 +153,12 @@ fun newResultScreen(navController: NavHostController) {
                             Log.i(javaClass.simpleName, "Saving note: ${note}")
 
                             noteService.createNote(note).call()
+                            Toast.makeText(context, "Добавлено", Toast.LENGTH_LONG).show()
+                            }
+                        ) {
+                            Text("Сохранить", fontStyle = FontStyle.Normal, fontSize = 15.sp)
                         }
-                    ) {
-                        Text("Save", fontStyle = FontStyle.Normal, fontSize = 15.sp)
+                                 
                     }
                 }
             }
@@ -178,71 +183,4 @@ fun fieldInput(
             v = it
         })
     return v
-}
-
-@Composable
-fun OutlinedTextFieldFolder(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier.fillMaxWidth(0.8f),
-    enabled: Boolean = true,
-    readOnly: Boolean = false,
-    textStyle: TextStyle = LocalTextStyle.current,
-    label: @Composable (() -> Unit)? = null,
-    placeholder: @Composable (() -> Unit)? = null,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    isError: Boolean = value.isEmpty(),
-    trailingIcon: @Composable (() -> Unit)? = {
-        if (isError)
-            Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colors.error)
-    },
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    singleLine: Boolean = true,
-    maxLines: Int = Int.MAX_VALUE,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    shape: Shape = MaterialTheme.shapes.small,
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
-        disabledTextColor = Color.Black
-    )
-
-): Boolean {
-
-    Column(
-        modifier = modifier
-            .padding(8.dp)
-    ) {
-        OutlinedTextField(
-            enabled = enabled,
-            readOnly = readOnly,
-            value = value,
-            onValueChange = onValueChange,
-            modifier = Modifier
-                .fillMaxWidth(),
-            singleLine = singleLine,
-            textStyle = textStyle,
-            label = label,
-            placeholder = placeholder,
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
-            isError = isError,
-            visualTransformation = visualTransformation,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            maxLines = maxLines,
-            interactionSource = interactionSource,
-            shape = shape,
-            colors = colors
-        )
-        if (isError) {
-            Text(
-                text = "Field can't be empty",
-                color = MaterialTheme.colors.error,
-                style = MaterialTheme.typography.caption,
-                modifier = Modifier.padding(start = 16.dp, top = 0.dp)
-            )
-        }
-    }
-    return isError //RETURN TRUE IF NOT ERROR  /// RETURN CORRECT OR NOT
 }

@@ -26,7 +26,11 @@ import com.myapplication.model.Note
 import com.myapplication.storage.TestNotes
 import com.myapplication.tools.DateParser
 import screens.navigation.MainDestinations
+import theme.color.border
+import theme.color.redText
+import tools.getBackgroundColor
 import tools.getResultColor
+import tools.getTextColor
 
 @Composable
 fun resultScreen(navController: NavHostController) {
@@ -115,10 +119,9 @@ private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth().padding(0.dp, 5.dp)
     ) {
-        val backgroundColor = Color.White
         Row(
-            modifier = Modifier.fillMaxWidth().background(backgroundColor)
-                .border(width = 2.dp, color = Color.LightGray),
+            modifier = Modifier.fillMaxWidth().background(getBackgroundColor())
+                .border(width = 1.dp, color = border),
         ) {
             ProvideTextStyle(TextStyle(fontWeight = FontWeight.Medium, fontSize = fontSize)) {
                 emptyField(fieldEmptyWidth)
@@ -142,13 +145,15 @@ private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
                 )
             }
         }
+
         Column(
             modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         ) {
             for (item in note) {
                 Row(
                     modifier = Modifier.fillMaxWidth().clickable(onClick = {
-                        val uuid=item.uuid.toString()
+
+                    val uuid=item.uuid.toString()
                         navController.navigate("${MainDestinations.SHOW_RESULT}/$uuid")
                     }).padding(fieldEmptyWidth, 0.dp)
                 ) {
@@ -166,7 +171,7 @@ private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
                         "\n" + item.result + " " + item.unit + "\n",
                         fontSize = fontSize,
                         modifier = Modifier.width(fieldResultWidth),
-                        color = getResultColor(item, Color.Black, Color.Red),
+                        color = getResultColor(item, getTextColor(), redText),
                     )
                     emptyField(fieldEmptyWidth)
                     Text(
