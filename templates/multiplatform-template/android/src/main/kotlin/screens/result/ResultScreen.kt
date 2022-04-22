@@ -23,11 +23,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.model.Note
-import com.myapplication.storage.TestNotes
 import com.myapplication.tools.DateParser
 import screens.navigation.MainDestinations
 import theme.color.border
 import theme.color.redText
+import tools.ListOfNotes
 import tools.getBackgroundColor
 import tools.getResultColor
 import tools.getTextColor
@@ -38,7 +38,9 @@ fun resultScreen(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val note = remember { TestNotes() }
+        val note = remember { ListOfNotes }
+
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -107,7 +109,7 @@ fun resultScreen(navController: NavHostController) {
 
 
 @Composable
-private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
+private fun fieldRes(note: List<Note>, navController: NavHostController) {
     val maxWidth = 390.dp
     val fieldDateWidth = (maxWidth.value / 7).dp
     val fieldTestWidth = (maxWidth.value / 3).dp
