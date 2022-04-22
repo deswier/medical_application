@@ -26,13 +26,12 @@ import androidx.navigation.NavHostController
 import com.myapplication.model.Note
 import factory.RequestFactory.noteService
 import factory.call
+import screens.navigation.BottomBarScreen
 import screens.outlinedTextFieldValidation
 import theme.color.appTheme
-import theme.color.notActiveButton
-import theme.color.saveButton
 import tools.datePickerOutlined
+import tools.getBackgroundColor
 import tools.getTextColor
-import java.time.LocalDate
 import java.util.*
 
 
@@ -135,7 +134,10 @@ fun newResultScreen(navController: NavHostController) {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = GrassGreen, contentColor = Color.Black),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = getBackgroundColor(),
+                            contentColor = getTextColor()
+                        ),
                         elevation = null,
                         enabled = getEnabledSave(test, result, referenceRange),
                         onClick = {
@@ -143,22 +145,21 @@ fun newResultScreen(navController: NavHostController) {
                                 UUID.randomUUID(),
                                 lab,
                                 test,
+                                //todo date
                                 Date(),
                                 result,
                                 referenceRange,
                                 unit,
                                 comment
                             )
-
-                            Log.i(javaClass.simpleName, "Saving note: ${note}")
-
+                            Log.i(javaClass.simpleName, "Saving note: $note")
                             noteService.createNote(note).call()
-                            Toast.makeText(context, "Добавлено", Toast.LENGTH_LONG).show()
-                            }
+                            Toast.makeText(context, "Сохранено", Toast.LENGTH_LONG).show()
+                            navController.navigate(BottomBarScreen.Result.route)
+                        }
                         ) {
                             Text("Сохранить", fontStyle = FontStyle.Normal, fontSize = 15.sp)
                         }
-                                 
                     }
                 }
             }

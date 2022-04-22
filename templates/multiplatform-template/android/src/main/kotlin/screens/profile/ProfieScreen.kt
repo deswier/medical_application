@@ -76,6 +76,7 @@ fun profileScreen(navController: NavHostController, profile: Profile) {
                 imagePickerTheme {
                     imagePicker(profile, editProfile.value)
                 }
+                val context = LocalContext.current
 
                 TextField(
                     value = fName.value,
@@ -111,7 +112,7 @@ fun profileScreen(navController: NavHostController, profile: Profile) {
                 )
 
                 date.value = datePickerTextField(
-                    context = LocalContext.current,
+                    context = context,
                     calendar = date.value,
                     enabled = editProfile.value,
                     width = widthField,
@@ -145,7 +146,6 @@ fun profileScreen(navController: NavHostController, profile: Profile) {
                         }
                     }
                 }
-                val context = LocalContext.current
                 if (editProfile.value) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
