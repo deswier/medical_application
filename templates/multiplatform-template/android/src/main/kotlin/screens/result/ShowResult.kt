@@ -8,8 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -23,11 +21,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.model.Note
 import com.myapplication.tools.DateParser
-import theme.Green
-import theme.LightGray
-import theme.color.getTextColor
-import theme.redText
+import theme.color.Green
+import theme.color.LightGray
+import theme.color.redText
 import tools.getResultColor
+import tools.getTextColor
 import java.util.*
 
 @Composable
@@ -76,9 +74,8 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                             "Комментарий:  " + card.comment,
                         )
 
-                    val edit = remember { mutableStateOf(false) }
                     var x = 50f
-                    var y = 0f
+                    var y: Float
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -86,8 +83,7 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                             val canvasWidth = size.width
                             val canvasHeight = size.height
                             if (Note.referenceRange(card.referenceRange).size == 2) {
-                                var firstIteration = true
-                                val similar = getSimilarResult(card.test);
+                                val similar = getSimilarResult(card.test)
                                 val minY = getMinResult(similar)
                                 val maxY = getMaxResult(similar)
                                 val diffRes = maxY - minY
@@ -209,6 +205,7 @@ fun getMaxResult(similar: ArrayList<Note>): Float {
 }
 
 fun getSimilarResult(test: String): ArrayList<Note> {
+    //TODO with database
     val notes = ArrayList<Note>()
     notes.add(
         Note(

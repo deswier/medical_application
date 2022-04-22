@@ -23,17 +23,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.storage.TestFolders
-import theme.DarkBlue
+import theme.color.DarkBlue
 
-import theme.color.AppTheme
-import theme.color.getBackgroundColor
+import theme.color.appTheme
+import tools.getBackgroundColor
 
 @Composable
 fun documentScreen(navController: NavHostController) {
-    var expanded = remember { mutableStateOf(false) }
+    val expanded = remember { mutableStateOf(false) }
     val openDialog = remember { mutableStateOf(false) }
     val folders = remember { TestFolders() }
-    AppTheme {
+    appTheme {
         Scaffold(
             topBar = {
                 TopAppBar {

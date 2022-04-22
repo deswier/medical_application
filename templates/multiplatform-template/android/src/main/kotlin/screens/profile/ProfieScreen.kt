@@ -1,6 +1,5 @@
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -20,16 +19,15 @@ import androidx.navigation.NavHostController
 import com.myapplication.exception.DataException
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
-import screens.navigation.BottomBarScreen
 import screens.profile.imagePicker
-import theme.color.AppTheme
-import theme.color.VariationOfTheme
-import theme.color.getTextColor
+import theme.color.appTheme
 import theme.color.getTextFieldColors
+import theme.color.saveButton
 import theme.darkAndLightTheme.TypeTheme
-import theme.imagePickerTheme
-import theme.saveButton
+import theme.darkAndLightTheme.darkAndLightColors.imagePickerTheme
+import theme.darkAndLightTheme.radioButtonTheme
 import tools.datePickerTextField
+import tools.getTextColor
 
 @Composable
 fun profileScreen(navController: NavHostController, profile: Profile) {
@@ -47,7 +45,7 @@ fun profileScreen(navController: NavHostController, profile: Profile) {
     val type = TypeTheme.getTypeTheme()
     val typeOfThemeApp = remember { mutableStateOf(type) }
 
-    AppTheme {
+    appTheme {
         Scaffold(
             topBar = {
                 TopAppBar {
@@ -172,8 +170,7 @@ fun profileScreen(navController: NavHostController, profile: Profile) {
                         }
                     }
                 }
-                SimpleRadioButtonComponent(typeOfThemeApp.value, navController)
-
+                radioButtonTheme(typeOfThemeApp.value, navController)
             }
         }
     }
@@ -201,65 +198,5 @@ fun getWidthWithIconByEnabled(enabled: Boolean, widthField: Dp, iconSize: Dp): D
     return if (enabled) widthField - iconSize
     else {
         widthField
-    }
-}
-
-@Composable
-fun setTheme(type: String) {
-    TypeTheme.setTheme(type)
-}
-
-
-@Composable
-fun SimpleRadioButtonComponent(typeOfThemeApp: String, navController: NavHostController) {
-    val dark = VariationOfTheme.dark
-    val light = VariationOfTheme.light
-    val system = VariationOfTheme.system
-    val radioOptions = listOf(dark, light, system)
-    var textType = remember { mutableStateOf(typeOfThemeApp) }
-    var bool = remember { mutableStateOf(false) }
-    setTheme(typeOfThemeApp)
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(typeOfThemeApp) }
-    Column(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Column {
-            radioOptions.forEach { text ->
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .selectable(
-                            selected = (text == selectedOption),
-                            onClick = { onOptionSelected(text) }
-                        )
-                        .padding(horizontal = 16.dp)
-                ) {
-                    val context = LocalContext.current
-                    RadioButton(
-                        selected = (text == selectedOption), modifier = Modifier.padding(all = Dp(value = 8F)),
-                        onClick = {
-                            //todo save state of theme in file(xml?)
-                            onOptionSelected(text)
-                            textType.value = text
-                            bool.value = true
-                            //  Toast.makeText(context, textType, Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                    Text(
-                        text = text,
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
-                    if (bool.value) {
-                        setTheme(textType.value)
-                        Toast.makeText(LocalContext.current, textType.value, Toast.LENGTH_SHORT).show()
-                        bool.value = false
-
-                        navController.navigate(BottomBarScreen.Profile.route)
-                    }
-                }
-            }
-        }
     }
 }

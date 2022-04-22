@@ -1,6 +1,5 @@
 package tools
 
-import OutlinedTextFieldFolder
 import android.app.DatePickerDialog
 import android.content.Context
 import android.widget.DatePicker
@@ -92,7 +91,7 @@ fun datePickerOutlined(
         }, year, month, day
     )
     Row() {
-        OutlinedTextFieldFolder(
+        outlinedTextFieldFolder(
             value = DateParser.convertToString(date.value),
             onValueChange = {
             },

@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import theme.bottomNavBarDemoTheme
+import theme.darkAndLightTheme.darkAndLightColors.bottomNavBarDemoTheme
 
 class MainActivity : AppCompatActivity() {
 

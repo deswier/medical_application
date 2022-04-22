@@ -26,11 +26,11 @@ import com.myapplication.model.Note
 import com.myapplication.storage.TestNotes
 import com.myapplication.tools.DateParser
 import screens.navigation.MainDestinations
-import theme.border
-import theme.color.getBackgroundColor
-import theme.color.getTextColor
-import theme.redText
+import theme.color.border
+import theme.color.redText
+import tools.getBackgroundColor
 import tools.getResultColor
+import tools.getTextColor
 
 @Composable
 fun resultScreen(navController: NavHostController) {

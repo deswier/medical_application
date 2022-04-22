@@ -5,10 +5,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,8 +35,8 @@ fun newFolderScreen(navController: NavController) {
             },
         ) {
 
-            var name by rememberSaveable { mutableStateOf("") }
-            val widthField = 350.dp
+//            var name by rememberSaveable { mutableStateOf("") }
+//            val widthField = 350.dp
 
 //            Column(
 //                modifier = Modifier

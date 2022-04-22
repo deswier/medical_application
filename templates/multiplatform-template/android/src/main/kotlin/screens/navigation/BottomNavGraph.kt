@@ -16,7 +16,7 @@ import profileScreen
 import screens.documentScreen
 import screens.result.resultScreen
 import screens.result.showResultScreen
-import theme.color.AppTheme
+import theme.color.appTheme
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -32,46 +32,23 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = BottomBarScreen.Result.route
     ) {
         composable(route = BottomBarScreen.Document.route) {
-            AppTheme {
+            appTheme {
                 documentScreen(navController)
             }
         }
         composable(route = BottomBarScreen.Result.route) {
-            AppTheme {
+            appTheme {
                 resultScreen(navController)
             }
         }
         composable(route = BottomBarScreen.Profile.route) {
-            AppTheme {
+            appTheme {
                 profileScreen(navController, profile)
             }
         }
         composable(route = "adderResult") {
             newResultScreen(navController)
         }
-
-//        composable(route = "adderFolder") {
-//            folderFromDocumentScreen(navController)
-//        }
-//
-//        composable(route = "adderFile") {
-//            newResultScreen(navController)
-//        }
-
-//        composable(
-//            route = "${MainDestinations.OPEN_FOLDER}/{${MainDestinations.PARENT_FOLDER}}",
-//            arguments = listOf(navArgument(MainDestinations.PARENT_FOLDER) {
-//                type =
-//                    NavType.StringType
-//                //here will be uuid
-//            })
-//        ) { backStackEntry ->
-//            val arguments = requireNotNull(backStackEntry.arguments)
-//            val resultCardId = arguments.getString(MainDestinations.RESULT_CARD,null)
-//            if (resultCardId != null)
-//            //    CardDialog(resultCardId, upPress, {}, {})
-//                showResultScreen(navController,resultCardId)
-//        }
 
         composable(
             route = "${MainDestinations.SHOW_RESULT}/{${MainDestinations.RESULT_CARD}}",
@@ -83,8 +60,7 @@ fun BottomNavGraph(navController: NavHostController) {
             val arguments = requireNotNull(backStackEntry.arguments)
             val resultCardId = arguments.getString(MainDestinations.RESULT_CARD, null)
             if (resultCardId != null)
-            //    CardDialog(resultCardId, upPress, {}, {})
-                showResultScreen(navController,resultCardId)
+                showResultScreen(navController, resultCardId)
         }
     }
 }

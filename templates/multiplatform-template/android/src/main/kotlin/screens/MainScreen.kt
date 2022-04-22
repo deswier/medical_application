@@ -12,13 +12,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import screens.navigation.BottomBarScreen
 import screens.navigation.BottomNavGraph
-import theme.color.AppTheme
+import theme.color.appTheme
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    AppTheme {
+    appTheme {
         Scaffold(bottomBar = { BottomBar(navController = navController) }) {
             BottomNavGraph(navController = navController)
         }
