@@ -210,25 +210,25 @@ fun getSimilarResult(test: String): ArrayList<Note> {
     notes.add(
         Note(
             UUID.randomUUID(), "Invitro",
-            "HbA1c", Calendar.getInstance(), "17", "4-20", "%", null
+            "HbA1c", Date(), "17", "4-20", "%", null
         )
     )
     notes.add(
         Note(
             UUID.randomUUID(), "KDL",
-            "HbA1c", Calendar.getInstance(), "23", "4-20", "%", null
+            "HbA1c", Date(), "23", "4-20", "%", null
         )
     )
     notes.add(
         Note(
             UUID.randomUUID(), "Invitro",
-            "HbA1c", Calendar.getInstance(), "30", "4-20", "%", null
+            "HbA1c", Date(), "30", "4-20", "%", null
         )
     )
     notes.add(
         Note(
             UUID.randomUUID(), "Invitro",
-            "HbA1c", Calendar.getInstance(), "15", "4-20", "%", null
+            "HbA1c", Date(), "15", "4-20", "%", null
         )
     )
     return notes
@@ -238,6 +238,6 @@ fun getCardOfResult(uuid: String): Note {
     //TODO with database
     return Note(
         UUID.fromString(uuid), "Invitro",
-        "Fe", Calendar.getInstance(), "выявленно", "не выявленно", "", "i love banana"
+        "Fe", Date(), "выявленно", "не выявленно", "", "i love banana"
     )
 }

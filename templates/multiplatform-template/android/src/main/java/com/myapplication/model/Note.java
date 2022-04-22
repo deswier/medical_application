@@ -1,14 +1,12 @@
 package com.myapplication.model;
 
-import android.os.Build;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myapplication.exception.DataException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,8 +16,9 @@ public class Note implements Serializable {
     private String lab;
     @NotNull
     private String test;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull
-    LocalDate date;
+    Date date;
     @NotNull
     private String result;
     @NotNull
@@ -27,18 +26,7 @@ public class Note implements Serializable {
     private String unit;
     private String comment;
 
-    public Note(UUID uuid, String lab, @NotNull String test, @NotNull Calendar date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
-        this.uuid = uuid;
-        this.lab = lab;
-        this.test = test;
-        this.date = convert(date);
-        this.result = result;
-        this.referenceRange = referenceRange;
-        this.unit = unit;
-        this.comment = comment;
-    }
-
-    public Note(UUID uuid, String lab, @NotNull String test, @NotNull LocalDate date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
+    public Note(UUID uuid, String lab, @NotNull String test, @NotNull Date date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
         this.uuid = uuid;
         this.lab = lab;
         this.test = test;
@@ -76,12 +64,6 @@ public class Note implements Serializable {
         return lab + " " + test + " " + result + unit + " " + referenceRange + unit + "\n";
     }
 
-    private LocalDate convert(Calendar calendar) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId()).toLocalDate();
-        } else return null;
-    }
-
     @NotNull
     public String getTest() {
         return test;
@@ -101,7 +83,7 @@ public class Note implements Serializable {
     }
 
     @NotNull
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
