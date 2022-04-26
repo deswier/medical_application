@@ -5,8 +5,7 @@ import com.myapplication.model.Note
 import factory.RequestFactory
 import factory.call
 
-object ListOfNotes {
-    public var notes: MutableList<Note> = mutableListOf()
+data class ListOfNotes(var notes: MutableList<Note> = mutableListOf()) {
 
     init {
         RequestFactory.noteService.allNotes().call(onSuccess = { _, v2 ->
@@ -16,9 +15,13 @@ object ListOfNotes {
         })
     }
 
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+
     @Throws(DataException::class)
-    fun add(n: Note?) {
-        notes.add(n!!)
+    public fun add(n: Note?): Boolean {
+        return notes.add(n!!)
     }
 
     public fun searchNote(search: String): MutableList<Note> {

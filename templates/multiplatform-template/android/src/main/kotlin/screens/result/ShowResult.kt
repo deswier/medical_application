@@ -8,6 +8,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -21,6 +23,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.model.Note
 import com.myapplication.tools.DateParser
+import factory.RequestFactory
+import factory.call
 import theme.color.Green
 import theme.color.LightGray
 import theme.color.redText
@@ -29,8 +33,10 @@ import tools.getTextColor
 import java.util.*
 
 @Composable
-fun showResultScreen(navController: NavHostController, uuid: String) {
-    val card = getCardOfResult(uuid)
+fun showResultScreen(navController: NavHostController, uuid: UUID) {
+    val card = remember {
+        mutableStateOf(getCardOfResult(uuid))
+    }
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -47,7 +53,7 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                             "contentDescription",
                         )
                     }
-                    Text(card.test, fontSize = 22.sp)
+                    Text(card.value.test, fontSize = 22.sp)
                     Spacer(Modifier.weight(1f, true))
 
                 }
@@ -62,16 +68,16 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                         .padding(30.dp, 0.dp)
                         .verticalScroll(rememberScrollState()),
                 ) {
-                    var text = DateParser.convertToString(card.date)
-                    if (card.lab != null && card.lab != "null")
-                        text = text + ", " + card.lab
+                    var text = DateParser.convertToString(card.value.date)
+                    if (card.value.lab != null && card.value.lab != "null")
+                        text = text + ", " + card.value.lab
                     Text(
                         text,
                         modifier = Modifier.padding(top = 50.dp)
                     )
-                    if (card.comment != null && card.comment != "null")
+                    if (card.value.comment != null && card.value.comment != "null")
                         Text(
-                            "Комментарий:  " + card.comment,
+                            "Комментарий:  " + card.value.comment,
                         )
 
                     var x = 50f
@@ -82,8 +88,8 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                         Canvas(modifier = Modifier.fillMaxWidth().height(200.dp).padding(top = 50.dp)) {
                             val canvasWidth = size.width
                             val canvasHeight = size.height
-                            if (Note.referenceRange(card.referenceRange).size == 2) {
-                                val similar = getSimilarResult(card.test)
+                            if (Note.referenceRange(card.value.referenceRange).size == 2) {
+                                val similar = getSimilarResult(card.value.test)
                                 val minY = getMinResult(similar)
                                 val maxY = getMaxResult(similar)
                                 val diffRes = maxY - minY
@@ -99,7 +105,7 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                                     val res = item.result.toFloat()
                                     y = canvasHeight - (delta * res - minus)
                                     drawCircle(
-                                        color = getResultColor(card, Color.Green, redText),
+                                        color = getResultColor(card.value, Color.Green, redText),
                                         center = Offset(x = x, y = y),
                                         radius = 15f
                                     )
@@ -158,7 +164,7 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                             } else {
 
                                 drawCircle(
-                                    color = getResultColor(card, Color.Green, redText),
+                                    color = getResultColor(card.value, Color.Green, redText),
                                     center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
                                     radius = size.minDimension / 2
                                 )
@@ -167,17 +173,17 @@ fun showResultScreen(navController: NavHostController, uuid: String) {
                                     textSize = 17.sp.toPx()
                                     color = android.graphics.Color.WHITE
                                 }
-                                val kPadding = 2 + (0.085 * (card.result + " " + card.unit).length)
+                                val kPadding = 2 + (0.085 * (card.value.result + " " + card.value.unit).length)
                                 drawIntoCanvas {
                                     it.nativeCanvas.drawText(
-                                        card.result + " " + card.unit,
+                                        card.value.result + " " + card.value.unit,
                                         (canvasWidth / kPadding).toFloat(), canvasHeight / 2, textPaint
                                     )
                                 }
                             }
                         }
                         Text(
-                            "Целевой результат: " + card.referenceRange,
+                            "Целевой результат: " + card.value.referenceRange,
                             color = Green,
                             modifier = Modifier.padding(15.dp)
                         )
@@ -234,10 +240,20 @@ fun getSimilarResult(test: String): ArrayList<Note> {
     return notes
 }
 
-fun getCardOfResult(uuid: String): Note {
-    //TODO with database
-    return Note(
-        UUID.fromString(uuid), "Invitro",
-        "Fe", Date(), "выявленно", "не выявленно", "", "i love banana"
-    )
+fun getCardOfResult(uuid: UUID): Note {
+    var card: Note? = null
+    while (card == null)
+        RequestFactory.noteService.getNote((uuid)).call(onSuccess = { _, v2 ->
+            card = Note(
+                UUID.randomUUID(),
+                v2.body()!!.lab,
+                v2.body()!!.test,
+                Date(),
+                v2.body()!!.result,
+                v2.body()!!.referenceRange,
+                v2.body()!!.unit,
+                v2.body()?.comment
+            )
+        })
+    return card!!
 }

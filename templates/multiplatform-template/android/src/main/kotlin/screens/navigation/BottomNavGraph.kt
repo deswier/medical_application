@@ -1,9 +1,9 @@
 package screens.navigation
 
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -13,6 +13,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
+import factory.RequestFactory
+import factory.call
 import newResultScreen
 import profileScreen
 import screens.documentScreen
@@ -30,10 +32,10 @@ fun BottomNavGraph(navController: NavHostController) {
         cal.set(1999, 5, 13)
         Profile(FullName("Alina", "Mikhaleva"), cal, 'F', null)
     }
-    val results = remember { ListOfNotes }
-
-    val contex = LocalContext.current
-    Toast.makeText(contex, results.notes.toString(), Toast.LENGTH_LONG).show()
+    val context = LocalContext.current
+    val results = remember {
+        mutableStateOf(getResults())
+    }
 
     NavHost(
         navController = navController,
@@ -46,10 +48,11 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarScreen.Result.route) {
             appTheme {
-                resultScreen(navController, results)
+                resultScreen(navController, results.value)
             }
         }
         composable(route = BottomBarScreen.Profile.route) {
+
             appTheme {
                 profileScreen(navController, profile)
             }
@@ -66,9 +69,19 @@ fun BottomNavGraph(navController: NavHostController) {
             })
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
-            val resultCardId = arguments.getString(MainDestinations.RESULT_CARD, null)
+            val resultCardId = UUID.fromString(arguments.getString(MainDestinations.RESULT_CARD, null))
             if (resultCardId != null)
                 showResultScreen(navController, resultCardId)
         }
     }
+}
+
+fun getResults(): ListOfNotes {
+    val l = ListOfNotes()
+    RequestFactory.noteService.allNotes().call(onSuccess = { _, v2 ->
+        v2.body()?.forEach {
+            l.add(it)
+        }
+    })
+    return l
 }

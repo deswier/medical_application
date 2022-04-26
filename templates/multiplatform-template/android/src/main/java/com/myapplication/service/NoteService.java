@@ -12,7 +12,10 @@ import java.util.UUID;
 
 public interface NoteService {
     @GET("v1/note/{uuid}")
-    Call<Note> getRepo(@Path("uuid") UUID uuid);
+    Call<Note> getNote(@Path("uuid") UUID uuid);
+
+    @GET("v1/note/{test}")
+    Call<Note> getNote(@Path("test") String test);
 
     @GET("/v1/note/")
     Call<List<Note>> allNotes();

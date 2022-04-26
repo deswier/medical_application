@@ -35,11 +35,15 @@ import tools.getTextColor
 
 @Composable
 fun resultScreen(navController: NavHostController, results: ListOfNotes) {
+    //if(results.notes.isEmpty()) resultScreen(navController,results)
+
     val note = remember { results }
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        //if(results.notes.isEmpty()) navController.navigate(BottomBarScreen.Result.route)
+
         var contex = LocalContext.current
 
         Column(
@@ -156,7 +160,6 @@ private fun fieldRes(note: List<Note>, navController: NavHostController) {
             for (item in note) {
                 Row(
                     modifier = Modifier.fillMaxWidth().clickable(onClick = {
-
                         val uuid = item.uuid.toString()
                         navController.navigate("${MainDestinations.SHOW_RESULT}/$uuid")
                     }).padding(fieldEmptyWidth, 0.dp)
