@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.model.Note
 import com.myapplication.tools.DateParser
+import factory.RequestFactory
+import factory.call
 import screens.navigation.MainDestinations
 import theme.color.border
 import theme.color.redText
@@ -34,10 +36,12 @@ import tools.getResultColor
 import tools.getTextColor
 
 @Composable
-fun resultScreen(navController: NavHostController, results: ListOfNotes) {
-    //if(results.notes.isEmpty()) resultScreen(navController,results)
+fun resultScreen(navController: NavHostController) {
+    val results = remember {
+        mutableStateOf(ListOfNotes(ArrayList<Note>()))
+    }
+    getListOfResult(results)
 
-    val note = remember { results }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -52,7 +56,7 @@ fun resultScreen(navController: NavHostController, results: ListOfNotes) {
         ) {
 //            Toast.makeText(contex, note.notes.toString(), Toast.LENGTH_LONG).show()
             var search by rememberSaveable { mutableStateOf("") }
-            var searchRes by rememberSaveable { mutableStateOf(note.notes) }
+            var searchRes by rememberSaveable { mutableStateOf(results.value.notes) }
 
             Scaffold(
                 topBar = {
@@ -101,8 +105,8 @@ fun resultScreen(navController: NavHostController, results: ListOfNotes) {
                             onValueChange = {
                                 search = it
                                 searchRes = if (search == "") {
-                                    note.notes
-                                } else note.searchNote(search)
+                                    results.value.notes
+                                } else results.value.searchNote(search)
                             }
                         )
                     }
@@ -113,6 +117,13 @@ fun resultScreen(navController: NavHostController, results: ListOfNotes) {
     }
 }
 
+fun getListOfResult(results: MutableState<ListOfNotes>) {
+    RequestFactory.noteService.allNotes().call(onSuccess = { _, v2 ->
+        v2.body()?.forEach {
+            results.value.add(it)
+        }
+    })
+}
 
 @Composable
 private fun fieldRes(note: List<Note>, navController: NavHostController) {

@@ -2,18 +2,10 @@ package tools
 
 import com.myapplication.exception.DataException
 import com.myapplication.model.Note
-import factory.RequestFactory
-import factory.call
 
-data class ListOfNotes(var notes: MutableList<Note> = mutableListOf()) {
-
-    init {
-        RequestFactory.noteService.allNotes().call(onSuccess = { _, v2 ->
-            v2.body()?.forEach {
-                add(it)
-            }
-        })
-    }
+data class ListOfNotes(
+    var notes: ArrayList<Note>
+) {
 
     override fun hashCode(): Int {
         return super.hashCode()
@@ -24,8 +16,8 @@ data class ListOfNotes(var notes: MutableList<Note> = mutableListOf()) {
         return notes.add(n!!)
     }
 
-    public fun searchNote(search: String): MutableList<Note> {
-        val res: MutableList<Note> = mutableListOf()
+    public fun searchNote(search: String): ArrayList<Note> {
+        val res: ArrayList<Note> = arrayListOf()
         for (note in notes) {
             if (isSubstring(search, note.test)) res.add(note)
         }

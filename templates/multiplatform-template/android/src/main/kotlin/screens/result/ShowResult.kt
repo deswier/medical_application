@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -34,9 +35,11 @@ import java.util.*
 
 @Composable
 fun showResultScreen(navController: NavHostController, uuid: UUID) {
+
     val card = remember {
-        mutableStateOf(getCardOfResult(uuid))
+        mutableStateOf(Note())
     }
+    getCardOfResult(uuid, card)
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -53,9 +56,8 @@ fun showResultScreen(navController: NavHostController, uuid: UUID) {
                             "contentDescription",
                         )
                     }
-                    Text(card.value.test, fontSize = 22.sp)
+                    Text(card.value.test ?: "", fontSize = 22.sp)
                     Spacer(Modifier.weight(1f, true))
-
                 }
             },
         ) {
@@ -88,7 +90,7 @@ fun showResultScreen(navController: NavHostController, uuid: UUID) {
                         Canvas(modifier = Modifier.fillMaxWidth().height(200.dp).padding(top = 50.dp)) {
                             val canvasWidth = size.width
                             val canvasHeight = size.height
-                            if (Note.referenceRange(card.value.referenceRange).size == 2) {
+                            if (Note.referenceRange(card.value.referenceRange ?: "").size == 2) {
                                 val similar = getSimilarResult(card.value.test)
                                 val minY = getMinResult(similar)
                                 val maxY = getMaxResult(similar)
@@ -183,7 +185,7 @@ fun showResultScreen(navController: NavHostController, uuid: UUID) {
                             }
                         }
                         Text(
-                            "Целевой результат: " + card.value.referenceRange,
+                            ("Целевой результат: " + card.value.referenceRange) ?: "",
                             color = Green,
                             modifier = Modifier.padding(15.dp)
                         )
@@ -240,20 +242,17 @@ fun getSimilarResult(test: String): ArrayList<Note> {
     return notes
 }
 
-fun getCardOfResult(uuid: UUID): Note {
-    var card: Note? = null
-    while (card == null)
-        RequestFactory.noteService.getNote((uuid)).call(onSuccess = { _, v2 ->
-            card = Note(
-                UUID.randomUUID(),
-                v2.body()!!.lab,
-                v2.body()!!.test,
-                Date(),
-                v2.body()!!.result,
-                v2.body()!!.referenceRange,
-                v2.body()!!.unit,
-                v2.body()?.comment
-            )
-        })
-    return card!!
+fun getCardOfResult(uuid: UUID, card: MutableState<Note>) {
+    RequestFactory.noteService.getNote((uuid)).call(onSuccess = { _, v2 ->
+        card.value = Note(
+            UUID.randomUUID(),
+            v2.body()!!.lab,
+            v2.body()!!.test,
+            Date(),
+            v2.body()!!.result,
+            v2.body()!!.referenceRange,
+            v2.body()!!.unit,
+            v2.body()?.comment
+        )
+    })
 }

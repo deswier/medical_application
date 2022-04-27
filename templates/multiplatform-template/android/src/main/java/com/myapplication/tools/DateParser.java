@@ -12,6 +12,7 @@ public class DateParser {
     }
 
     public static String convertToString(Date date) {
+        if (date == null) return "";
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return convertToString(calendar);

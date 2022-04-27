@@ -12,16 +12,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.myapplication.model.FullName
+import com.myapplication.model.Note
 import com.myapplication.model.Profile
-import factory.RequestFactory
-import factory.call
 import newResultScreen
 import profileScreen
 import screens.documentScreen
 import screens.result.resultScreen
 import screens.result.showResultScreen
 import theme.color.appTheme
-import tools.ListOfNotes
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -33,8 +31,8 @@ fun BottomNavGraph(navController: NavHostController) {
         Profile(FullName("Alina", "Mikhaleva"), cal, 'F', null)
     }
     val context = LocalContext.current
-    val results = remember {
-        mutableStateOf(getResults())
+    val card = remember {
+        mutableStateOf(Note())
     }
 
     NavHost(
@@ -48,7 +46,7 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarScreen.Result.route) {
             appTheme {
-                resultScreen(navController, results.value)
+                resultScreen(navController)
             }
         }
         composable(route = BottomBarScreen.Profile.route) {
@@ -76,12 +74,12 @@ fun BottomNavGraph(navController: NavHostController) {
     }
 }
 
-fun getResults(): ListOfNotes {
-    val l = ListOfNotes()
-    RequestFactory.noteService.allNotes().call(onSuccess = { _, v2 ->
-        v2.body()?.forEach {
-            l.add(it)
-        }
-    })
-    return l
-}
+//fun getResults(): ListOfNotes {
+//    val l = ListOfNotes()
+//    RequestFactory.noteService.allNotes().call(onSuccess = { _, v2 ->
+//        v2.body()?.forEach {
+//            l.add(it)
+//        }
+//    })
+//    return l
+//}

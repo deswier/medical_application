@@ -14,20 +14,19 @@ import java.util.UUID;
 public class Note implements Serializable {
     private UUID uuid;
     private String lab;
-    @NotNull
-    private String test;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @NotNull
+    //   @NotNull
     Date date;
-    @NotNull
+    //   @NotNull
+    private String test;
+    //    @NotNull
     private String result;
-    @NotNull
+    //  @NotNull
     private String referenceRange;
     private String unit;
     private String comment;
 
     public Note() {
-
     }
 
     public Note(UUID uuid, String lab, @NotNull String test, @NotNull Date date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
