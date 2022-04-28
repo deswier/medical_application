@@ -95,7 +95,7 @@ fun newResultScreen(navController: NavHostController) {
                         )
 
 
-                              Row() {
+                        Row() {
                             outlinedTextFieldValidation(
                                 value = result,
                                 onValueChange = {
@@ -105,7 +105,8 @@ fun newResultScreen(navController: NavHostController) {
                                 modifier = Modifier.width(200.dp)
                             )
 
-                            OutlinedTextField(value = unit,
+                            OutlinedTextField(
+                                value = unit,
                                 label = { Text("Unit") },
                                 singleLine = true,
                                 modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 8.dp),
@@ -128,35 +129,35 @@ fun newResultScreen(navController: NavHostController) {
                                 modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 15.dp),
                                 onValueChange = {
                                 })
-                        }    
-                    lab = fieldInput(lab, "Lab", widthField)
-                    comment = fieldInput(comment, "Comment", widthField)
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = getBackgroundColor(),
-                            contentColor = getTextColor()
-                        ),
-                        elevation = null,
-                        enabled = getEnabledSave(test, result, referenceRange),
-                        onClick = {
-                            val note = Note(
-                                UUID.randomUUID(),
-                                lab,
-                                test,
-                                //todo date
-                                Date(),
-                                result,
-                                referenceRange,
-                                unit,
-                                comment
-                            )
-                            Log.i(javaClass.simpleName, "Saving note: $note")
-                            noteService.createNote(note).call()
-                            Toast.makeText(context, "Сохранено", Toast.LENGTH_LONG).show()
-                            navController.navigate(BottomBarScreen.Result.route)
                         }
+                        lab = fieldInput(lab, "Lab", widthField)
+                        comment = fieldInput(comment, "Comment", widthField)
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = getBackgroundColor(),
+                                contentColor = getTextColor()
+                            ),
+                            elevation = null,
+                            enabled = getEnabledSave(test, result, referenceRange),
+                            onClick = {
+                                val note = Note(
+                                    UUID.randomUUID(),
+                                    lab,
+                                    test,
+                                    //todo date
+                                    Date(),
+                                    result,
+                                    referenceRange,
+                                    unit,
+                                    comment
+                                )
+                                Log.i(javaClass.simpleName, "Saving note: $note")
+                                noteService.createNote(note).call()
+                                Toast.makeText(context, "Сохранено", Toast.LENGTH_SHORT).show()
+                                navController.navigate(BottomBarScreen.Result.route)
+                            }
                         ) {
                             Text("Сохранить", fontStyle = FontStyle.Normal, fontSize = 15.sp)
                         }

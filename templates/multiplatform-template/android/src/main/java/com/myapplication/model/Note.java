@@ -40,7 +40,7 @@ public class Note implements Serializable {
         this.comment = comment;
     }
 
-    public boolean isNormalResult() throws DataException {
+    public boolean isNormalResult() {
         try {
             String[] arrayReferenceRange = referenceRange(referenceRange);
             if (arrayReferenceRange.length == 1) return Objects.equals(arrayReferenceRange[0], String.valueOf(result));

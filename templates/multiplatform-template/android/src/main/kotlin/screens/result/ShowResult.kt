@@ -7,6 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +41,10 @@ fun showResultScreen(navController: NavHostController, uuid: UUID) {
         mutableStateOf(Note())
     }
     getCardOfResult(uuid, card)
+    val similar = remember {
+        mutableStateOf(ArrayList<Note>())
+    }
+    if (card.value.test != null) getSimilarResult(card.value.test, similar)
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -58,6 +63,17 @@ fun showResultScreen(navController: NavHostController, uuid: UUID) {
                     }
                     Text(card.value.test ?: "", fontSize = 22.sp)
                     Spacer(Modifier.weight(1f, true))
+                    IconButton(
+                        onClick = {
+                            RequestFactory.noteService.deleteNote(uuid).call()
+                        },
+                        Modifier.width(50.dp)
+                    ) {
+                        Icon(
+                            Icons.Filled.Delete,
+                            "contentDescription",
+                        )
+                    }
                 }
             },
         ) {
@@ -91,82 +107,85 @@ fun showResultScreen(navController: NavHostController, uuid: UUID) {
                             val canvasWidth = size.width
                             val canvasHeight = size.height
                             if (Note.referenceRange(card.value.referenceRange ?: "").size == 2) {
-                                val similar = getSimilarResult(card.value.test)
                                 val minY = getMinResult(similar)
                                 val maxY = getMaxResult(similar)
                                 val diffRes = maxY - minY
                                 val delta = canvasHeight / diffRes
                                 val minus = minY * delta
-                                val nextX = canvasWidth / (similar.size)
+                                val nextX = canvasWidth / (similar.value.size)
                                 val textPaint = Paint().asFrameworkPaint().apply {
                                     isAntiAlias = true
                                     textSize = 12.sp.toPx()
                                     color = android.graphics.Color.BLUE
                                 }
-                                for (item in similar) {
-                                    val res = item.result.toFloat()
-                                    y = canvasHeight - (delta * res - minus)
-                                    drawCircle(
-                                        color = getResultColor(card.value, Color.Green, redText),
-                                        center = Offset(x = x, y = y),
-                                        radius = 15f
-                                    )
-                                    drawLine(
-                                        start = Offset(
-                                            x = 7f,
-                                            y = canvasHeight - (delta * Note.referenceRange(item.referenceRange)[1].toFloat() - minus)
-                                        ),
-                                        end = Offset(
-                                            x = size.maxDimension,
-                                            y = canvasHeight - (delta * Note.referenceRange(item.referenceRange)[1].toFloat() - minus)
-                                        ),
-                                        color = LightGray
-                                    )
-                                    drawLine(
-                                        start = Offset(
-                                            x = 7f,
-                                            y = canvasHeight - (delta * Note.referenceRange(item.referenceRange)[0].toFloat() - minus)
-                                        ),
-                                        end = Offset(
-                                            x = size.maxDimension,
-                                            y = canvasHeight - (delta * Note.referenceRange(item.referenceRange)[0].toFloat() - minus)
-                                        ),
-                                        color = LightGray
-                                    )
-                                    drawIntoCanvas {
-                                        it.nativeCanvas.drawText(
-                                            Note.referenceRange(item.referenceRange)[0],
-                                            0f,
-                                            canvasHeight - (delta * Note.referenceRange(item.referenceRange)[0].toFloat() - minus),
-                                            textPaint
+                                for (item in similar.value) {
+                                    try {
+                                        val res = item.result.toFloat()
+                                        y = canvasHeight - (delta * res - minus)
+                                        drawCircle(
+                                            color = getResultColor(card.value, Color.Green, redText),
+                                            center = Offset(x = x, y = y),
+                                            radius = 15f
                                         )
+                                        drawLine(
+                                            start = Offset(
+                                                x = 7f,
+                                                y = canvasHeight - (delta * Note.referenceRange(item.referenceRange)[1].toFloat() - minus)
+                                            ),
+                                            end = Offset(
+                                                x = size.maxDimension,
+                                                y = canvasHeight - (delta * Note.referenceRange(item.referenceRange)[1].toFloat() - minus)
+                                            ),
+                                            color = LightGray
+                                        )
+                                        drawLine(
+                                            start = Offset(
+                                                x = 7f,
+                                                y = canvasHeight - (delta * Note.referenceRange(item.referenceRange)[0].toFloat() - minus)
+                                            ),
+                                            end = Offset(
+                                                x = size.maxDimension,
+                                                y = canvasHeight - (delta * Note.referenceRange(item.referenceRange)[0].toFloat() - minus)
+                                            ),
+                                            color = LightGray
+                                        )
+                                        drawIntoCanvas {
+                                            it.nativeCanvas.drawText(
+                                                Note.referenceRange(item.referenceRange)[0],
+                                                0f,
+                                                canvasHeight - (delta * Note.referenceRange(item.referenceRange)[0].toFloat() - minus),
+                                                textPaint
+                                            )
+                                        }
+
+                                        drawIntoCanvas {
+                                            it.nativeCanvas.drawText(
+                                                Note.referenceRange(item.referenceRange)[1],
+                                                0f,
+                                                canvasHeight - (delta * Note.referenceRange(item.referenceRange)[1].toFloat() - minus),
+                                                textPaint
+                                            )
+                                        }
+
+                                        drawIntoCanvas {
+                                            it.nativeCanvas.drawText(
+                                                DateParser.convertToString(item.date),
+                                                x, 550F, textPaint
+                                            )
+                                        }
+
+                                        drawIntoCanvas {
+                                            it.nativeCanvas.drawText(res.toString(), x, y + 55, textPaint)
+                                        }
+                                        x += nextX
+                                    } catch (_: NumberFormatException) {
                                     }
 
-                                    drawIntoCanvas {
-                                        it.nativeCanvas.drawText(
-                                            Note.referenceRange(item.referenceRange)[1],
-                                            0f,
-                                            canvasHeight - (delta * Note.referenceRange(item.referenceRange)[1].toFloat() - minus),
-                                            textPaint
-                                        )
-                                    }
-
-                                    drawIntoCanvas {
-                                        it.nativeCanvas.drawText(
-                                            DateParser.convertToString(item.date),
-                                            x, 550F, textPaint
-                                        )
-                                    }
-
-                                    drawIntoCanvas {
-                                        it.nativeCanvas.drawText(res.toString(), x, y + 55, textPaint)
-                                    }
-                                    x += nextX
                                 }
                             } else {
 
                                 drawCircle(
-                                    color = getResultColor(card.value, Color.Green, redText),
+                                    color = getResultColor(card.value, Green, redText),
                                     center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
                                     radius = size.minDimension / 2
                                 )
@@ -184,67 +203,56 @@ fun showResultScreen(navController: NavHostController, uuid: UUID) {
                                 }
                             }
                         }
-                        Text(
-                            ("Целевой результат: " + card.value.referenceRange) ?: "",
-                            color = Green,
-                            modifier = Modifier.padding(15.dp)
-                        )
                     }
+                    Text(
+                        (("Целевой результат: " + (card.value.referenceRange + " " + card.value.unit))),
+                        color = Green,
+                        modifier = Modifier.padding(15.dp)
+                    )
                 }
             }
         }
     }
 }
 
-fun getMinResult(similar: ArrayList<Note>): Float {
-    var min = Note.referenceRange(similar[0].referenceRange)[0].toFloat()
-    for (item in similar) {
-        if (item.result.toFloat() < min) min = item.result.toFloat()
+fun getMinResult(similar: MutableState<ArrayList<Note>>): Float {
+    var min = 10000f//Note.referenceRange(similar.value[0].referenceRange)[0].toFloat()
+    for (item in similar.value) {
+        try {
+            if (item.result.toFloat() < min) min = item.result.toFloat()
+        } catch (_: NumberFormatException) {
+        }
     }
     return min
 }
 
-fun getMaxResult(similar: ArrayList<Note>): Float {
-    var max = Note.referenceRange(similar[0].referenceRange)[1].toFloat()
-    for (item in similar) {
-        if (item.result.toFloat() > max) max = item.result.toFloat()
+fun getMaxResult(similar: MutableState<ArrayList<Note>>): Float {
+    var max = -1f//Note.referenceRange(similar.value[0].referenceRange)[1].toFloat()
+    for (item in similar.value) {
+        try {
+            if (item.result.toFloat() > max) max = item.result.toFloat()
+        } catch (_: NumberFormatException) {
+        }
     }
     return max
 }
 
-fun getSimilarResult(test: String): ArrayList<Note> {
+fun getSimilarResult(test: String, results: MutableState<ArrayList<Note>>) {
     //TODO with database
-    val notes = ArrayList<Note>()
-    notes.add(
-        Note(
-            UUID.randomUUID(), "Invitro",
-            "HbA1c", Date(), "17", "4-20", "%", null
-        )
-    )
-    notes.add(
-        Note(
-            UUID.randomUUID(), "KDL",
-            "HbA1c", Date(), "23", "4-20", "%", null
-        )
-    )
-    notes.add(
-        Note(
-            UUID.randomUUID(), "Invitro",
-            "HbA1c", Date(), "30", "4-20", "%", null
-        )
-    )
-    notes.add(
-        Note(
-            UUID.randomUUID(), "Invitro",
-            "HbA1c", Date(), "15", "4-20", "%", null
-        )
-    )
-    return notes
+    val list: ArrayList<Note> = arrayListOf()
+    RequestFactory.noteService.getNote((test)).call(onSuccess = { _, v2 ->
+        // Log.i(javaClass.simpleName, "Get note: $test")
+        v2.body()?.forEach {
+            list.add(it)
+        }
+        results.value = list
+    })
 }
 
 fun getCardOfResult(uuid: UUID, card: MutableState<Note>) {
     RequestFactory.noteService.getNote((uuid)).call(onSuccess = { _, v2 ->
         card.value = Note(
+            //todo change uuid
             UUID.randomUUID(),
             v2.body()!!.lab,
             v2.body()!!.test,

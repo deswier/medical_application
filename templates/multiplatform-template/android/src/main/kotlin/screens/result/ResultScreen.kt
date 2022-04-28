@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,7 +30,6 @@ import factory.call
 import screens.navigation.MainDestinations
 import theme.color.border
 import theme.color.redText
-import tools.ListOfNotes
 import tools.getBackgroundColor
 import tools.getResultColor
 import tools.getTextColor
@@ -38,7 +37,7 @@ import tools.getTextColor
 @Composable
 fun resultScreen(navController: NavHostController) {
     val results = remember {
-        mutableStateOf(ListOfNotes(ArrayList<Note>()))
+        mutableStateOf(ArrayList<Note>())
     }
     getListOfResult(results)
 
@@ -46,9 +45,6 @@ fun resultScreen(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        //if(results.notes.isEmpty()) navController.navigate(BottomBarScreen.Result.route)
-
-        var contex = LocalContext.current
 
         Column(
             modifier = Modifier
@@ -56,7 +52,7 @@ fun resultScreen(navController: NavHostController) {
         ) {
 //            Toast.makeText(contex, note.notes.toString(), Toast.LENGTH_LONG).show()
             var search by rememberSaveable { mutableStateOf("") }
-            var searchRes by rememberSaveable { mutableStateOf(results.value.notes) }
+            var searchRes by rememberSaveable { results }
 
             Scaffold(
                 topBar = {
@@ -105,8 +101,8 @@ fun resultScreen(navController: NavHostController) {
                             onValueChange = {
                                 search = it
                                 searchRes = if (search == "") {
-                                    results.value.notes
-                                } else results.value.searchNote(search)
+                                    results.value
+                                } else searchNote(search, results.value)
                             }
                         )
                     }
@@ -117,11 +113,13 @@ fun resultScreen(navController: NavHostController) {
     }
 }
 
-fun getListOfResult(results: MutableState<ListOfNotes>) {
+fun getListOfResult(results: MutableState<ArrayList<Note>>) {
+    val list: ArrayList<Note> = arrayListOf()
     RequestFactory.noteService.allNotes().call(onSuccess = { _, v2 ->
         v2.body()?.forEach {
-            results.value.add(it)
+            list.add(it)
         }
+        results.value = list
     })
 }
 
@@ -142,10 +140,17 @@ private fun fieldRes(note: List<Note>, navController: NavHostController) {
             modifier = Modifier.fillMaxWidth().background(getBackgroundColor())
                 .border(width = 1.dp, color = border),
         ) {
-            ProvideTextStyle(TextStyle(fontWeight = FontWeight.Medium, fontSize = fontSize)) {
+            ProvideTextStyle(
+                TextStyle(
+                    fontWeight = FontWeight.Medium,
+                    fontSize = fontSize,
+                    textAlign = TextAlign.Center
+                )
+            ) {
                 emptyField(fieldEmptyWidth)
                 Text(
                     "\nДата\n", modifier = Modifier.width(fieldDateWidth)
+
                 )
                 emptyField(fieldEmptyWidth)
 
@@ -178,11 +183,15 @@ private fun fieldRes(note: List<Note>, navController: NavHostController) {
                     Text(
                         "\n" + DateParser.convertToString(item.date) + "\n",
                         fontSize = fontSize,
-                        modifier = Modifier.width(fieldDateWidth)
+                        modifier = Modifier.width(fieldDateWidth),
+                        textAlign = TextAlign.Center
                     )
                     emptyField(fieldEmptyWidth)
                     Text(
-                        "\n" + item.test + "\n", fontSize = fontSize, modifier = Modifier.width(fieldTestWidth)
+                        "\n" + item.test + "\n",
+                        fontSize = fontSize,
+                        modifier = Modifier.width(fieldTestWidth),
+                        textAlign = TextAlign.Center
                     )
                     emptyField(fieldEmptyWidth)
                     Text(
@@ -190,12 +199,14 @@ private fun fieldRes(note: List<Note>, navController: NavHostController) {
                         fontSize = fontSize,
                         modifier = Modifier.width(fieldResultWidth),
                         color = getResultColor(item, getTextColor(), redText),
+                        textAlign = TextAlign.Center
                     )
                     emptyField(fieldEmptyWidth)
                     Text(
                         "\n" + item.referenceRange + "\n" + " " + item.unit,
                         fontSize = fontSize,
-                        modifier = Modifier.width(fieldReferenceWidth)
+                        modifier = Modifier.width(fieldReferenceWidth),
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -206,4 +217,22 @@ private fun fieldRes(note: List<Note>, navController: NavHostController) {
 @Composable
 fun emptyField(fieldEmptyWidth: Dp) {
     Text("", Modifier.width(fieldEmptyWidth))
+}
+
+public fun searchNote(search: String, notes: ArrayList<Note>): ArrayList<Note> {
+    val res: ArrayList<Note> = arrayListOf()
+    for (note in notes) {
+        if (isSubstring(search, note.test)) res.add(note)
+    }
+    return res
+}
+
+private fun isSubstring(substr: String, str: String): Boolean {
+    val strArray = str.split(" ".toRegex()).toTypedArray()
+    for (s in strArray) {
+        if (s.length >= substr.length) if (s.substring(0, substr.length)
+                .lowercase() == substr.lowercase()
+        ) return true
+    }
+    return false
 }
