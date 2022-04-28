@@ -21,5 +21,5 @@ public interface NoteService {
     Call<Void> createNote(@Body Note note);
 
     @DELETE("v1/note/{uuid}")
-    Call<Void> deleteNote(@Body UUID uuid);
+    Call<Void> deleteNote(@Path("uuid") UUID uuid);
 }

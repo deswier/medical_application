@@ -27,6 +27,7 @@ import com.myapplication.model.Note
 import com.myapplication.tools.DateParser
 import factory.RequestFactory
 import factory.call
+import screens.navigation.BottomBarScreen
 import theme.color.Green
 import theme.color.LightGray
 import theme.color.redText
@@ -66,6 +67,8 @@ fun showResultScreen(navController: NavHostController, uuid: UUID) {
                     IconButton(
                         onClick = {
                             RequestFactory.noteService.deleteNote(uuid).call()
+                            navController.navigate(BottomBarScreen.Result.route)
+
                         },
                         Modifier.width(50.dp)
                     ) {

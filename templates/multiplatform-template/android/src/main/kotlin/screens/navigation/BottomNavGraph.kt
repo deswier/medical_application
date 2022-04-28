@@ -73,13 +73,3 @@ fun BottomNavGraph(navController: NavHostController) {
         }
     }
 }
-
-//fun getResults(): ListOfNotes {
-//    val l = ListOfNotes()
-//    RequestFactory.noteService.allNotes().call(onSuccess = { _, v2 ->
-//        v2.body()?.forEach {
-//            l.add(it)
-//        }
-//    })
-//    return l
-//}
