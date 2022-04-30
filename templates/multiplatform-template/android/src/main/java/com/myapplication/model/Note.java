@@ -40,6 +40,10 @@ public class Note implements Serializable {
         this.comment = comment;
     }
 
+    public static String[] referenceRange(String referenceRange) throws DataException {
+        return referenceRange.trim().split("-");
+    }
+
     public boolean isNormalResult() {
         try {
             String[] arrayReferenceRange = referenceRange(referenceRange);
@@ -48,17 +52,11 @@ public class Note implements Serializable {
                 double result = Double.parseDouble(this.result);
                 double leftRange = Double.parseDouble(arrayReferenceRange[0]);
                 double rightRange = Double.parseDouble(arrayReferenceRange[1]);
-                return result <= rightRange && result >= leftRange;
+                return ((result <= rightRange) && (result >= leftRange));
             } else return true;
         } catch (Exception e) {
             return true;
         }
-    }
-
-    public static String[] referenceRange(String referenceRange) throws DataException {
-        String[] r = referenceRange.trim().split("-");
-        if (r.length == 1 || r.length == 2) return r;
-        else throw new DataException("Invalid reference range " + referenceRange);
     }
 
     @NotNull

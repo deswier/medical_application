@@ -3,16 +3,13 @@ package screens.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.myapplication.model.FullName
-import com.myapplication.model.Note
 import com.myapplication.model.Profile
 import newResultScreen
 import profileScreen
@@ -29,10 +26,6 @@ fun BottomNavGraph(navController: NavHostController) {
         val cal = Calendar.getInstance()
         cal.set(1999, 5, 13)
         Profile(FullName("Alina", "Mikhaleva"), cal, 'F', null)
-    }
-    val context = LocalContext.current
-    val card = remember {
-        mutableStateOf(Note())
     }
 
     NavHost(

@@ -9,8 +9,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,9 +53,10 @@ fun resultScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
         ) {
-//            Toast.makeText(contex, note.notes.toString(), Toast.LENGTH_LONG).show()
-            var search by rememberSaveable { mutableStateOf("") }
-            var searchRes by rememberSaveable { mutableStateOf(results) }
+            var search = remember { mutableStateOf("") }
+            var allResults = remember { mutableStateOf(results) }
+            var searchResults = remember { mutableStateOf(ArrayList<Note>()) }
+            var onScreenResults = remember { mutableStateOf(allResults.value) }
 
             Scaffold(
                 topBar = {
@@ -93,7 +96,7 @@ fun resultScreen(navController: NavHostController) {
                     ) {
                         val focusManager = LocalFocusManager.current
                         TextField(
-                            value = search,
+                            value = search.value,
                             placeholder = {
                                 Row() {
                                     Icon(Icons.Filled.Search, contentDescription = "Поиск")
@@ -109,14 +112,18 @@ fun resultScreen(navController: NavHostController) {
                                 }
                             ),
                             onValueChange = {
-                                search = it
-                                searchRes.value = if (search == "") {
-                                    results.value
-                                } else searchNote(search, results.value)
+                                search.value = it
+
+                                if (search.value == "") {
+                                    onScreenResults.value = allResults.value
+                                } else {
+                                    searchResults.value = searchNote(search.value, results.value)
+                                    onScreenResults.value = searchResults
+                                }
                             }
                         )
                     }
-                    fieldRes(searchRes, navController)
+                    fieldRes(onScreenResults, navController)
                 }
             }
         }
@@ -135,7 +142,7 @@ fun getListOfResult(results: MutableState<ArrayList<Note>>) {
 
 @Composable
 private fun fieldRes(
-    note: MutableState<ArrayList<Note>>, navController: NavHostController
+    note: MutableState<MutableState<ArrayList<Note>>>, navController: NavHostController
 ) {
     val maxWidth = 390.dp
     val fieldDateWidth = (maxWidth.value / 7).dp
@@ -185,7 +192,7 @@ private fun fieldRes(
         Column(
             modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         ) {
-            for (item in note.value) {
+            for (item in note.value.value) {
                 Row(
                     modifier = Modifier.fillMaxWidth().clickable(onClick = {
                         val uuid = item.uuid.toString()
@@ -231,7 +238,7 @@ fun emptyField(fieldEmptyWidth: Dp) {
     Text("", Modifier.width(fieldEmptyWidth))
 }
 
-public fun searchNote(search: String, notes: ArrayList<Note>): ArrayList<Note> {
+fun searchNote(search: String, notes: ArrayList<Note>): ArrayList<Note> {
     val res: ArrayList<Note> = arrayListOf()
     for (note in notes) {
         if (isSubstring(search, note.test)) res.add(note)

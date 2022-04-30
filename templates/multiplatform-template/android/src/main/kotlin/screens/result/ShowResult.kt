@@ -1,5 +1,6 @@
 package screens.result
 
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,6 +39,7 @@ import java.util.*
 
 @Composable
 fun showResultScreen(navController: NavHostController, uuid: UUID) {
+    val contex = LocalContext.current
     val isDeleted = remember { mutableStateOf(false) }
     val card = remember { mutableStateOf(Note()) }
     if (!isDeleted.value) getCardOfResult(uuid, card)
@@ -67,6 +70,7 @@ fun showResultScreen(navController: NavHostController, uuid: UUID) {
                             isDeleted.value = true
                             navController.navigate(BottomBarScreen.Result.route)
                             RequestFactory.noteService.deleteNote(uuid).call()
+                            Toast.makeText(contex, "Удалено", Toast.LENGTH_SHORT).show()
                         },
                         Modifier.width(50.dp)
                     ) {
