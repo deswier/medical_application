@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -52,7 +53,7 @@ fun resultScreen(navController: NavHostController) {
         ) {
 //            Toast.makeText(contex, note.notes.toString(), Toast.LENGTH_LONG).show()
             var search by rememberSaveable { mutableStateOf("") }
-            var searchRes by rememberSaveable { results }
+            var searchRes by rememberSaveable { mutableStateOf(results) }
 
             Scaffold(
                 topBar = {
@@ -62,6 +63,15 @@ fun resultScreen(navController: NavHostController) {
                         ProvideTextStyle(
                             TextStyle(color = Color.White, fontSize = 8.sp)
                         ) {}
+                        IconButton(
+                            onClick = {
+                                getListOfResult(results);
+                            }) {
+                            Icon(
+                                Icons.Filled.Refresh,
+                                "contentDescription",
+                            )
+                        }
                         IconButton(
                             onClick = {
                                 navController.navigate("adderResult")
@@ -100,7 +110,7 @@ fun resultScreen(navController: NavHostController) {
                             ),
                             onValueChange = {
                                 search = it
-                                searchRes = if (search == "") {
+                                searchRes.value = if (search == "") {
                                     results.value
                                 } else searchNote(search, results.value)
                             }
@@ -124,7 +134,9 @@ fun getListOfResult(results: MutableState<ArrayList<Note>>) {
 }
 
 @Composable
-private fun fieldRes(note: List<Note>, navController: NavHostController) {
+private fun fieldRes(
+    note: MutableState<ArrayList<Note>>, navController: NavHostController
+) {
     val maxWidth = 390.dp
     val fieldDateWidth = (maxWidth.value / 7).dp
     val fieldTestWidth = (maxWidth.value / 3).dp
@@ -173,7 +185,7 @@ private fun fieldRes(note: List<Note>, navController: NavHostController) {
         Column(
             modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         ) {
-            for (item in note) {
+            for (item in note.value) {
                 Row(
                     modifier = Modifier.fillMaxWidth().clickable(onClick = {
                         val uuid = item.uuid.toString()

@@ -20,6 +20,6 @@ public interface NoteService {
     @POST("v1/note/")
     Call<Void> createNote(@Body Note note);
 
-    @DELETE("v1/note/{uuid}")
+    @DELETE("v1/note/delete/{uuid}")
     Call<Void> deleteNote(@Path("uuid") UUID uuid);
 }
