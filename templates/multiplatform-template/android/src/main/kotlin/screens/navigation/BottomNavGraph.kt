@@ -3,16 +3,16 @@ package screens.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.myapplication.model.FullName
 import com.myapplication.model.Profile
 import newResultScreen
 import profileScreen
+import screens.autorize.LogIn
 import screens.documentScreen
 import screens.result.resultScreen
 import screens.result.showResultScreen
@@ -21,12 +21,7 @@ import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
-    val profile = remember {
-        val cal = Calendar.getInstance()
-        cal.set(1999, 5, 13)
-        Profile(FullName("Alina", "Mikhaleva"), cal, 'F', null)
-    }
+fun BottomNavGraph(navController: NavHostController, profile: MutableState<Profile>) {
 
     NavHost(
         navController = navController,
@@ -43,13 +38,18 @@ fun BottomNavGraph(navController: NavHostController) {
             }
         }
         composable(route = BottomBarScreen.Profile.route) {
-
             appTheme {
-                profileScreen(navController, profile)
+                profileScreen(navController, profile.value)
             }
         }
         composable(route = "adderResult") {
             newResultScreen(navController)
+        }
+
+        composable(route = "logIn") {
+            appTheme {
+                LogIn(navController, profile)
+            }
         }
 
         composable(

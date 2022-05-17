@@ -1,7 +1,6 @@
 package com.myapplication.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.myapplication.exception.DataException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +39,7 @@ public class Note implements Serializable {
         this.comment = comment;
     }
 
-    public static String[] referenceRange(String referenceRange) throws DataException {
+    public static String[] referenceRange(String referenceRange) {
         return referenceRange.trim().split("-");
     }
 
@@ -49,10 +48,10 @@ public class Note implements Serializable {
             String[] arrayReferenceRange = referenceRange(referenceRange);
             if (arrayReferenceRange.length == 1) return Objects.equals(arrayReferenceRange[0], String.valueOf(result));
             else if (arrayReferenceRange.length == 2) {
-                double result = Double.parseDouble(this.result);
+                Double result = Double.parseDouble(this.result);
                 double leftRange = Double.parseDouble(arrayReferenceRange[0]);
                 double rightRange = Double.parseDouble(arrayReferenceRange[1]);
-                return ((result <= rightRange) && (result >= leftRange));
+                return (result.compareTo(leftRange) == 0 || result.compareTo(leftRange) == 1) && (result.compareTo(rightRange) == 0 || result.compareTo(rightRange) == -1);
             } else return true;
         } catch (Exception e) {
             return true;
