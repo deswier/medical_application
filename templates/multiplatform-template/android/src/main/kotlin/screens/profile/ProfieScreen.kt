@@ -1,4 +1,6 @@
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -9,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
@@ -29,19 +32,20 @@ import theme.darkAndLightTheme.radioButtonTheme
 import tools.datePickerTextField
 import tools.getTextColor
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun profileScreen(navController: NavHostController, profile: Profile) {
+fun profileScreen(navController: NavHostController, profile: MutableState<Profile>) {
     val widthField = 300.dp
     val editProfile = remember { mutableStateOf(false) }
-    val fName = remember { mutableStateOf(profile.name.firstName) }
-    val sName = remember { mutableStateOf(profile.name.secondName) }
-    val date = remember { mutableStateOf(profile.dateOfBirth) }
-    val gender = remember { mutableStateOf(profile.genderToString) }
+    val fName = remember { mutableStateOf(profile.value.name.firstName) }
+    val sName = remember { mutableStateOf(profile.value.name.secondName) }
+    val date = remember { mutableStateOf(profile.value.dateOfBirth) }
+    val gender = remember { mutableStateOf(profile.value.genderToString) }
 
-    var prevFName = profile.name.firstName
-    var prevSName = profile.name.secondName
-    var prevDate = profile.dateOfBirth
-    var prevGender = profile.genderToString
+    var prevFName = profile.value.name.firstName
+    var prevSName = profile.value.name.secondName
+    var prevDate = profile.value.dateOfBirth
+    var prevGender = profile.value.genderToString
     val type = TypeTheme.getTypeTheme()
     val typeOfThemeApp = remember { mutableStateOf(type) }
 
@@ -74,7 +78,7 @@ fun profileScreen(navController: NavHostController, profile: Profile) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 imagePickerTheme {
-                    imagePicker(profile, editProfile.value)
+                    imagePicker(profile.value, editProfile.value)
                 }
                 val context = LocalContext.current
 
@@ -88,7 +92,7 @@ fun profileScreen(navController: NavHostController, profile: Profile) {
                     onValueChange = {
                         try {
                             fName.value = it
-                            profile.name = FullName(it, sName.value)
+                            profile.value.name = FullName(it, sName.value)
                         } catch (e: DataException) {
                             //TODO name incorrect
                         }
@@ -104,7 +108,7 @@ fun profileScreen(navController: NavHostController, profile: Profile) {
                     onValueChange = {
                         try {
                             sName.value = it
-                            profile.name = FullName(profile.name.firstName, it)
+                            profile.value.name = FullName(profile.value.name.firstName, it)
                         } catch (e: DataException) {
                             //TODO name incorrect
                         }
@@ -170,7 +174,26 @@ fun profileScreen(navController: NavHostController, profile: Profile) {
                         }
                     }
                 }
-                radioButtonTheme(typeOfThemeApp.value, navController)
+                if (!editProfile.value)
+                    radioButtonTheme(typeOfThemeApp.value, navController)
+                else {
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.White,
+                            contentColor = Color.Red
+                        ),
+                        elevation = null,
+                        enabled = editProfile.value,
+                        onClick = {
+                            //todo
+//                            profile.value.clearProfile()
+//                            LogIn(navController,profile)
+                        }
+                    ) {
+                        Text("Выйти", fontStyle = FontStyle.Normal, fontSize = 15.sp)
+                    }
+                }
             }
         }
     }

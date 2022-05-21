@@ -13,6 +13,7 @@ import com.myapplication.model.Profile
 import newResultScreen
 import profileScreen
 import screens.autorize.LogIn
+import screens.autorize.registration
 import screens.documentScreen
 import screens.result.resultScreen
 import screens.result.showResultScreen
@@ -39,7 +40,7 @@ fun BottomNavGraph(navController: NavHostController, profile: MutableState<Profi
         }
         composable(route = BottomBarScreen.Profile.route) {
             appTheme {
-                profileScreen(navController, profile.value)
+                profileScreen(navController, profile)
             }
         }
         composable(route = "adderResult") {
@@ -49,6 +50,12 @@ fun BottomNavGraph(navController: NavHostController, profile: MutableState<Profi
         composable(route = "logIn") {
             appTheme {
                 LogIn(navController, profile)
+            }
+        }
+
+        composable(route = "registration") {
+            appTheme {
+                registration(navController)
             }
         }
 

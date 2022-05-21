@@ -13,7 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.myapplication.model.Profile
-import screens.autorize.LogIn
+import screens.autorize.registration
 import screens.navigation.BottomBarScreen
 import screens.navigation.BottomNavGraph
 import theme.color.appTheme
@@ -26,7 +26,7 @@ fun MainScreen() {
         mutableStateOf(Profile())
     }
     appTheme {
-        if (profile.value.isEmptyProfile) LogIn(navController, profile)
+        if (profile.value.isEmptyProfile) registration(navController)
         else
             Scaffold(bottomBar = { BottomBar(navController = navController) }) {
                 BottomNavGraph(navController = navController, profile)

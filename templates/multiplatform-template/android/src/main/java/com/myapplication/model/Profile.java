@@ -22,7 +22,6 @@ public class Profile {
         this.dateOfBirth = dateOfBirth;
         this.photo = null;
         //TODO get photo;
-        //BitmapFactory.decodeResource(context.getResources() R.drawable.icon_resource);
         setGender(gender);
     }
 
@@ -34,6 +33,10 @@ public class Profile {
         photo = null;
         name = null;
         dateOfBirth = null;
+    }
+
+    public void clearProfile() {
+        emptyProfile();
     }
 
     public Boolean isEmptyProfile() {

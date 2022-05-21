@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
@@ -26,7 +27,6 @@ import androidx.navigation.NavHostController
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
 import theme.color.appTheme
-import theme.color.photoFrame
 import tools.getBackgroundColor
 import tools.getTextColor
 import java.util.*
@@ -59,10 +59,9 @@ fun LogIn(navController: NavHostController, profile: MutableState<Profile>) {
                         log.value = it
                     }
                 )
-
                 TextField(
                     label = { Text(text = "Пароль") },
-                    value = (getHiddenPassword(password.value)),
+                    value = (getHiddenPassword(password)),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     onValueChange = {
                         password.value = it
@@ -86,6 +85,22 @@ fun LogIn(navController: NavHostController, profile: MutableState<Profile>) {
                 ) {
                     Text("Войти", fontStyle = FontStyle.Normal, fontSize = 15.sp)
                 }
+
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth().padding(top = 20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = getBackgroundColor(),
+                        contentColor = getTextColor()
+                    ),
+                    onClick = {
+                        //todo
+                        Log.i(javaClass.simpleName, "Registration")
+                        navController.navigate("registration")
+                    }
+                ) {
+                    Text("Регистрация", fontStyle = FontStyle.Normal, fontSize = 15.sp)
+                }
             }
         }
     }
@@ -95,9 +110,9 @@ fun getEnabledLogIn(log: MutableState<String>, password: MutableState<String>): 
     return log.value.length >= 5 && password.value.length >= 8
 }
 
-fun getHiddenPassword(password: String): String {
+fun getHiddenPassword(password: MutableState<String>): String {
     var res = ""
-    repeat(password.length) {
+    repeat(password.value.length) {
         res += "*"
     }
     return res;
@@ -109,11 +124,11 @@ fun logo(context: Context) {
     val img = context.getDrawable(resId)
     if (img != null) {
         Image(
-            bitmap = img.toBitmap(150, 150).asImageBitmap(),
+            bitmap = img.toBitmap(250, 250).asImageBitmap(),
             contentDescription = "Logo",
-            modifier = Modifier.size(100.dp)
+            modifier = Modifier.size(250.dp)
                 .clip(CircleShape)
-                .border(width = 3.dp, color = photoFrame, shape = CircleShape)
+                .border(width = 3.dp, color = Color.White, shape = CircleShape)
         )
     }
 }
