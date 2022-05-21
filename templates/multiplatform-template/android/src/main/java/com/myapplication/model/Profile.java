@@ -22,19 +22,36 @@ public class Profile {
         this.dateOfBirth = dateOfBirth;
         this.photo = null;
         //TODO get photo;
-        //BitmapFactory.decodeResource(context.getResources() R.drawable.icon_resource);
         setGender(gender);
     }
 
-    public void setGender(char gender) throws DataException {
-        if (isGender(gender)) this.gender = gender;
-        else throw new DataException("Incorrect gender " + gender + ". Gender must be 'M' for male or 'F' for female");
+    public Profile() {
+        emptyProfile();
+    }
+
+    private void emptyProfile() {
+        photo = null;
+        name = null;
+        dateOfBirth = null;
+    }
+
+    public void clearProfile() {
+        emptyProfile();
+    }
+
+    public Boolean isEmptyProfile() {
+        return photo == null && name == null && dateOfBirth == null;
     }
 
     public Profile(FullName name, Calendar dateOfBirth, char gender, Bitmap photo) throws DataException {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.photo = photo;
+        if (isGender(gender)) this.gender = gender;
+        else throw new DataException("Incorrect gender " + gender + ". Gender must be 'M' for male or 'F' for female");
+    }
+
+    public void setGender(char gender) throws DataException {
         if (isGender(gender)) this.gender = gender;
         else throw new DataException("Incorrect gender " + gender + ". Gender must be 'M' for male or 'F' for female");
     }
@@ -47,7 +64,7 @@ public class Profile {
         return gender == 'M' || gender == 'F';
     }
 
-    public String getGenderToString(){
+    public String getGenderToString() {
         if (gender == 'M') return "Мужской";
         else return "Женский";
     }

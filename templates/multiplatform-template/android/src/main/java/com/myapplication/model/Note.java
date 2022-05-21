@@ -1,7 +1,6 @@
 package com.myapplication.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.myapplication.exception.DataException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,17 +13,20 @@ import java.util.UUID;
 public class Note implements Serializable {
     private UUID uuid;
     private String lab;
-    @NotNull
-    private String test;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @NotNull
+    //   @NotNull
     Date date;
-    @NotNull
+    //   @NotNull
+    private String test;
+    //    @NotNull
     private String result;
-    @NotNull
+    //  @NotNull
     private String referenceRange;
     private String unit;
     private String comment;
+
+    public Note() {
+    }
 
     public Note(UUID uuid, String lab, @NotNull String test, @NotNull Date date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
         this.uuid = uuid;
@@ -37,25 +39,23 @@ public class Note implements Serializable {
         this.comment = comment;
     }
 
-    public boolean isNormalResult() throws DataException {
+    public static String[] referenceRange(String referenceRange) {
+        return referenceRange.trim().split("-");
+    }
+
+    public boolean isNormalResult() {
         try {
             String[] arrayReferenceRange = referenceRange(referenceRange);
             if (arrayReferenceRange.length == 1) return Objects.equals(arrayReferenceRange[0], String.valueOf(result));
             else if (arrayReferenceRange.length == 2) {
-                double result = Double.parseDouble(this.result);
+                Double result = Double.parseDouble(this.result);
                 double leftRange = Double.parseDouble(arrayReferenceRange[0]);
                 double rightRange = Double.parseDouble(arrayReferenceRange[1]);
-                return result <= rightRange && result >= leftRange;
+                return (result.compareTo(leftRange) == 0 || result.compareTo(leftRange) == 1) && (result.compareTo(rightRange) == 0 || result.compareTo(rightRange) == -1);
             } else return true;
         } catch (Exception e) {
             return true;
         }
-    }
-
-    public static String[] referenceRange(String referenceRange) throws DataException {
-        String[] r = referenceRange.trim().split("-");
-        if (r.length == 1 || r.length == 2) return r;
-        else throw new DataException("Invalid reference range " + referenceRange);
     }
 
     @NotNull

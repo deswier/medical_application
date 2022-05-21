@@ -16,7 +16,7 @@ object RequestFactory {
     };
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(JacksonConverterFactory.create(objectMapper))
-        .baseUrl("http://127.0.0.1:8080/")
+        .baseUrl("http://10.0.2.2:8080/")
         .build()
         .also {
             HttpURLConnection.setFollowRedirects(true)

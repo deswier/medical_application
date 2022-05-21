@@ -7,9 +7,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,13 +21,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.model.Note
-import com.myapplication.storage.TestNotes
 import com.myapplication.tools.DateParser
+import factory.RequestFactory
+import factory.call
 import screens.navigation.MainDestinations
 import theme.color.border
 import theme.color.redText
@@ -34,17 +39,24 @@ import tools.getTextColor
 
 @Composable
 fun resultScreen(navController: NavHostController) {
+    val results = remember {
+        mutableStateOf(ArrayList<Note>())
+    }
+    getListOfResult(results)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val note = remember { TestNotes() }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            var search by rememberSaveable { mutableStateOf("") }
-            var searchRes by rememberSaveable { mutableStateOf(note.searchNote(search)) }
+            var search = remember { mutableStateOf("") }
+            var allResults = remember { mutableStateOf(results) }
+            var searchResults = remember { mutableStateOf(ArrayList<Note>()) }
+            var onScreenResults = remember { mutableStateOf(allResults.value) }
 
             Scaffold(
                 topBar = {
@@ -54,6 +66,15 @@ fun resultScreen(navController: NavHostController) {
                         ProvideTextStyle(
                             TextStyle(color = Color.White, fontSize = 8.sp)
                         ) {}
+                        IconButton(
+                            onClick = {
+                                getListOfResult(results);
+                            }) {
+                            Icon(
+                                Icons.Filled.Refresh,
+                                "contentDescription",
+                            )
+                        }
                         IconButton(
                             onClick = {
                                 navController.navigate("adderResult")
@@ -75,7 +96,7 @@ fun resultScreen(navController: NavHostController) {
                     ) {
                         val focusManager = LocalFocusManager.current
                         TextField(
-                            value = search,
+                            value = search.value,
                             placeholder = {
                                 Row() {
                                     Icon(Icons.Filled.Search, contentDescription = "Поиск")
@@ -91,23 +112,38 @@ fun resultScreen(navController: NavHostController) {
                                 }
                             ),
                             onValueChange = {
-                                search = it
-                                searchRes = if (search == "") {
-                                    note.notes
-                                } else note.searchNote(search)
+                                search.value = it
+
+                                if (search.value == "") {
+                                    onScreenResults.value = allResults.value
+                                } else {
+                                    searchResults.value = searchNote(search.value, results.value)
+                                    onScreenResults.value = searchResults
+                                }
                             }
                         )
                     }
-                    fieldRes(searchRes, navController)
+                    fieldRes(onScreenResults, navController)
                 }
             }
         }
     }
 }
 
+fun getListOfResult(results: MutableState<ArrayList<Note>>) {
+    val list: ArrayList<Note> = arrayListOf()
+    RequestFactory.noteService.allNotes().call(onSuccess = { _, v2 ->
+        v2.body()?.forEach {
+            list.add(it)
+        }
+        results.value = list
+    })
+}
 
 @Composable
-private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
+private fun fieldRes(
+    note: MutableState<MutableState<ArrayList<Note>>>, navController: NavHostController
+) {
     val maxWidth = 390.dp
     val fieldDateWidth = (maxWidth.value / 7).dp
     val fieldTestWidth = (maxWidth.value / 3).dp
@@ -123,10 +159,17 @@ private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
             modifier = Modifier.fillMaxWidth().background(getBackgroundColor())
                 .border(width = 1.dp, color = border),
         ) {
-            ProvideTextStyle(TextStyle(fontWeight = FontWeight.Medium, fontSize = fontSize)) {
+            ProvideTextStyle(
+                TextStyle(
+                    fontWeight = FontWeight.Medium,
+                    fontSize = fontSize,
+                    textAlign = TextAlign.Center
+                )
+            ) {
                 emptyField(fieldEmptyWidth)
                 Text(
                     "\nДата\n", modifier = Modifier.width(fieldDateWidth)
+
                 )
                 emptyField(fieldEmptyWidth)
 
@@ -149,22 +192,25 @@ private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
         Column(
             modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         ) {
-            for (item in note) {
+            for (item in note.value.value) {
                 Row(
                     modifier = Modifier.fillMaxWidth().clickable(onClick = {
-
-                    val uuid=item.uuid.toString()
+                        val uuid = item.uuid.toString()
                         navController.navigate("${MainDestinations.SHOW_RESULT}/$uuid")
                     }).padding(fieldEmptyWidth, 0.dp)
                 ) {
                     Text(
                         "\n" + DateParser.convertToString(item.date) + "\n",
                         fontSize = fontSize,
-                        modifier = Modifier.width(fieldDateWidth)
+                        modifier = Modifier.width(fieldDateWidth),
+                        textAlign = TextAlign.Center
                     )
                     emptyField(fieldEmptyWidth)
                     Text(
-                        "\n" + item.test + "\n", fontSize = fontSize, modifier = Modifier.width(fieldTestWidth)
+                        "\n" + item.test + "\n",
+                        fontSize = fontSize,
+                        modifier = Modifier.width(fieldTestWidth),
+                        textAlign = TextAlign.Center
                     )
                     emptyField(fieldEmptyWidth)
                     Text(
@@ -172,12 +218,14 @@ private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
                         fontSize = fontSize,
                         modifier = Modifier.width(fieldResultWidth),
                         color = getResultColor(item, getTextColor(), redText),
+                        textAlign = TextAlign.Center
                     )
                     emptyField(fieldEmptyWidth)
                     Text(
                         "\n" + item.referenceRange + "\n" + " " + item.unit,
                         fontSize = fontSize,
-                        modifier = Modifier.width(fieldReferenceWidth)
+                        modifier = Modifier.width(fieldReferenceWidth),
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -188,4 +236,22 @@ private fun fieldRes(note: ArrayList<Note>,navController: NavHostController) {
 @Composable
 fun emptyField(fieldEmptyWidth: Dp) {
     Text("", Modifier.width(fieldEmptyWidth))
+}
+
+fun searchNote(search: String, notes: ArrayList<Note>): ArrayList<Note> {
+    val res: ArrayList<Note> = arrayListOf()
+    for (note in notes) {
+        if (isSubstring(search, note.test)) res.add(note)
+    }
+    return res
+}
+
+private fun isSubstring(substr: String, str: String): Boolean {
+    val strArray = str.split(" ".toRegex()).toTypedArray()
+    for (s in strArray) {
+        if (s.length >= substr.length) if (s.substring(0, substr.length)
+                .lowercase() == substr.lowercase()
+        ) return true
+    }
+    return false
 }

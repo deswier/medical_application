@@ -26,13 +26,12 @@ import androidx.navigation.NavHostController
 import com.myapplication.model.Note
 import factory.RequestFactory.noteService
 import factory.call
+import screens.navigation.BottomBarScreen
 import screens.outlinedTextFieldValidation
 import theme.color.appTheme
-import theme.color.notActiveButton
-import theme.color.saveButton
 import tools.datePickerOutlined
+import tools.getBackgroundColor
 import tools.getTextColor
-import java.time.LocalDate
 import java.util.*
 
 
@@ -96,7 +95,7 @@ fun newResultScreen(navController: NavHostController) {
                         )
 
 
-                              Row() {
+                        Row() {
                             outlinedTextFieldValidation(
                                 value = result,
                                 onValueChange = {
@@ -106,7 +105,8 @@ fun newResultScreen(navController: NavHostController) {
                                 modifier = Modifier.width(200.dp)
                             )
 
-                            OutlinedTextField(value = unit,
+                            OutlinedTextField(
+                                value = unit,
                                 label = { Text("Unit") },
                                 singleLine = true,
                                 modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 8.dp),
@@ -129,36 +129,38 @@ fun newResultScreen(navController: NavHostController) {
                                 modifier = Modifier.width(widthField - 200.dp).padding(0.dp, 15.dp),
                                 onValueChange = {
                                 })
-                        }    
-                    lab = fieldInput(lab, "Lab", widthField)
-                    comment = fieldInput(comment, "Comment", widthField)
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = GrassGreen, contentColor = Color.Black),
-                        elevation = null,
-                        enabled = getEnabledSave(test, result, referenceRange),
-                        onClick = {
-                            val note = Note(
-                                UUID.randomUUID(),
-                                lab,
-                                test,
-                                Date(),
-                                result,
-                                referenceRange,
-                                unit,
-                                comment
-                            )
-
-                            Log.i(javaClass.simpleName, "Saving note: ${note}")
-
-                            noteService.createNote(note).call()
-                            Toast.makeText(context, "Добавлено", Toast.LENGTH_LONG).show()
+                        }
+                        lab = fieldInput(lab, "Lab", widthField)
+                        comment = fieldInput(comment, "Comment", widthField)
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = getBackgroundColor(),
+                                contentColor = getTextColor()
+                            ),
+                            elevation = null,
+                            enabled = getEnabledSave(test, result, referenceRange),
+                            onClick = {
+                                val note = Note(
+                                    UUID.randomUUID(),
+                                    lab,
+                                    test,
+                                    //todo date
+                                    Date(),
+                                    result,
+                                    referenceRange,
+                                    unit,
+                                    comment
+                                )
+                                Log.i(javaClass.simpleName, "Saving note: $note")
+                                noteService.createNote(note).call()
+                                Toast.makeText(context, "Сохранено", Toast.LENGTH_SHORT).show()
+                                navController.navigate(BottomBarScreen.Result.route)
                             }
                         ) {
                             Text("Сохранить", fontStyle = FontStyle.Normal, fontSize = 15.sp)
                         }
-                                 
                     }
                 }
             }
