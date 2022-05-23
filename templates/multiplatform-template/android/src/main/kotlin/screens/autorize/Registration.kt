@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.exception.DataException
+import com.myapplication.model.FullName
 import theme.color.appTheme
 import theme.color.getTextFieldColors
 import tools.getBackgroundColor
@@ -38,13 +40,27 @@ fun registration(navController: NavHostController) {
 
     val successLogIn = remember { mutableStateOf(false) }
     val openDialogEqualsPasswords = remember { mutableStateOf(false) }
-    val screenReg = remember { mutableStateOf(false) }
-    val screenProfile = remember { mutableStateOf(true) }
+    val screenReg = remember { mutableStateOf(true) }
+    val screenProfile = remember { mutableStateOf(false) }
+    val openDialogAlertName = remember { mutableStateOf(false) }
 
     appTheme {
         Scaffold(
             topBar = {
                 TopAppBar {
+                    if (screenProfile.value)
+                        IconButton(
+                            onClick = {
+                                screenProfile.value = false
+                                screenReg.value = true
+                            },
+                            Modifier.width(50.dp)
+                        ) {
+                            Icon(
+                                Icons.Filled.ArrowBack,
+                                "contentDescription",
+                            )
+                        }
                     Text("Healthynetic", fontSize = 22.sp, modifier = Modifier.padding(horizontal = 20.dp))
                     Spacer(Modifier.weight(1f, true))
                 }
@@ -92,9 +108,13 @@ fun registration(navController: NavHostController) {
                     }
                 } else {
                     textField(fName, "Имя", modifier = Modifier.padding(top = 20.dp))
-                    textField(sName, "Фамилия", modifier = Modifier.padding(top = 20.dp))
-                    Row() {
+                    textField(sName, "Фамилия")
+                    val age = remember { mutableStateOf(20) }
+                    val isErrorAge = remember { mutableStateOf(false) }
+                    textFieldAge(age, isErrorAge)
+                    Row(modifier = Modifier.width(150.dp)) {
                         TextField(
+                            modifier = Modifier.width(100.dp),
                             value = (gender.value),
                             label = { Text(text = "Пол") },
                             singleLine = true,
@@ -115,9 +135,6 @@ fun registration(navController: NavHostController) {
                             )
                         }
                     }
-                    val age = remember { mutableStateOf(20) }
-                    val isErrorAge = remember { mutableStateOf(false) }
-                    textFieldAge(age, isErrorAge)
                     Button(
                         modifier = Modifier
                             .fillMaxWidth().padding(top = 20.dp),
@@ -127,7 +144,12 @@ fun registration(navController: NavHostController) {
                         ),
                         enabled = fName.value != "" && sName.value != "" && !isErrorAge.value,
                         onClick = {
-                            //todo
+                            try {
+                                val fullName = FullName(fName.value, sName.value)
+                            } catch (_: DataException) {
+                                openDialogAlertName.value = true
+                            }
+                            //todo add profile
                         }
                     ) {
                         Text("Продолжить", fontStyle = FontStyle.Normal, fontSize = 15.sp)
@@ -137,10 +159,12 @@ fun registration(navController: NavHostController) {
             if (openDialogEqualsPasswords.value) {
                 alertDialog(openDialogEqualsPasswords, "Пароли не совпадают")
             }
+            if (openDialogAlertName.value) {
+                alertDialog(openDialogAlertName, "Имя и фамилия должны содержать только буквы")
+            }
         }
     }
 }
-
 
 @Composable
 fun alertDialog(openDialog: MutableState<Boolean>, error: String) {
