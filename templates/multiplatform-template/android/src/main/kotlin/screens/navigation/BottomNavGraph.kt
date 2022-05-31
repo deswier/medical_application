@@ -44,7 +44,7 @@ fun BottomNavGraph(navController: NavHostController, profile: MutableState<Profi
             }
         }
         composable(route = "adderResult") {
-            newResultScreen(navController)
+            newResultScreen(navController, profile)
         }
 
         composable(route = "logIn") {

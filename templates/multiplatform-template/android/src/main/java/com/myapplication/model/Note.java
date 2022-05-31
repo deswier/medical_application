@@ -5,12 +5,14 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
 @Getter
 public class Note implements Serializable {
+    private BigInteger user_id;
     private UUID uuid;
     private String lab;
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -28,7 +30,8 @@ public class Note implements Serializable {
     public Note() {
     }
 
-    public Note(UUID uuid, String lab, @NotNull String test, @NotNull Date date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
+    public Note(BigInteger user_id, UUID uuid, String lab, @NotNull String test, @NotNull Date date, @NotNull String result, @NotNull String referenceRange, String unit, String comment) {
+        this.user_id = user_id;
         this.uuid = uuid;
         this.lab = lab;
         this.test = test;
@@ -98,5 +101,13 @@ public class Note implements Serializable {
 
     public String getComment() {
         return comment;
+    }
+
+    public BigInteger getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(BigInteger user_id) {
+        this.user_id = user_id;
     }
 }

@@ -1,4 +1,4 @@
-package theme.color
+package theme.darkAndLightTheme.darkAndLightColors
 
 import androidx.compose.ui.graphics.Color
 

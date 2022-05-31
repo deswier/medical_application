@@ -3,6 +3,8 @@ package theme.color
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import theme.darkAndLightTheme.TypeTheme
+import theme.darkAndLightTheme.darkAndLightColors.DarkColorPalette
+import theme.darkAndLightTheme.darkAndLightColors.LightColorPalette
 
 @Composable
 fun appTheme(content: @Composable () -> Unit) {

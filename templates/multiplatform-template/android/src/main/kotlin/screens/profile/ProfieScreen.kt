@@ -202,7 +202,6 @@ fun profileScreen(navController: NavHostController, profile: MutableState<Profil
 @Composable
 fun iconButtonTopBar(editProfile: Boolean, icon: ImageVector): Boolean {
     var flagEdit by rememberSaveable { mutableStateOf(editProfile) }
-
     IconButton(
         onClick = {
             flagEdit = !flagEdit

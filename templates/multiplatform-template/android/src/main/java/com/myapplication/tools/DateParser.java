@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateParser {
-    private static final String PATTERN = "dd-MM-yyyy";
     private static final String SEPARATOR = "-";
 
     public static String convertToString(Calendar date) {

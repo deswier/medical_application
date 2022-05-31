@@ -256,6 +256,7 @@ fun getCardOfResult(uuid: UUID, card: MutableState<Note>) {
     RequestFactory.noteService.getNote((uuid)).call(onSuccess = { _, v2 ->
         card.value = Note(
             //todo change uuid
+            v2.body()!!.user_id,
             UUID.randomUUID(),
             v2.body()!!.lab,
             v2.body()!!.test,

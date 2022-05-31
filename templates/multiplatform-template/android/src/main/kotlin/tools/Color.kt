@@ -3,11 +3,11 @@ package tools
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.myapplication.model.Note
-import theme.color.backGroundDark
-import theme.color.backGroundLight
-import theme.color.onBackgroundDark
-import theme.color.onBackgroundLight
 import theme.darkAndLightTheme.TypeTheme
+import theme.darkAndLightTheme.darkAndLightColors.backGroundDark
+import theme.darkAndLightTheme.darkAndLightColors.backGroundLight
+import theme.darkAndLightTheme.darkAndLightColors.onBackgroundDark
+import theme.darkAndLightTheme.darkAndLightColors.onBackgroundLight
 
 fun getResultColor(item: Note, normalResult: Color, notNormalResult: Color): Color {
     return if (item.isNormalResult) normalResult

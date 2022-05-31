@@ -39,7 +39,7 @@ fun registration(navController: NavHostController) {
     val gender = remember { mutableStateOf("Мужской") }
 
     val successLogIn = remember { mutableStateOf(false) }
-    val openDialogEqualsPasswords = remember { mutableStateOf(false) }
+    val openDialogEqualsPasswords = remember { mutableStateOf(true) }
     val screenReg = remember { mutableStateOf(true) }
     val screenProfile = remember { mutableStateOf(false) }
     val openDialogAlertName = remember { mutableStateOf(false) }
@@ -95,8 +95,10 @@ fun registration(navController: NavHostController) {
                         enabled = getEnabledLogIn(log, password1) && getEnabledLogIn(log, password2),
                         onClick = {
                             //todo
-                            if (password2 == password1) {
-                                openDialogEqualsPasswords.value = true
+                            //Toast.makeText(context, password1.value+" "+password2.value, Toast.LENGTH_SHORT).show()
+
+                            if (password2.value != password1.value) {
+                                openDialogEqualsPasswords.value = false
                             } else {
                                 screenReg.value = false
                                 screenProfile.value = true
@@ -156,7 +158,7 @@ fun registration(navController: NavHostController) {
                     }
                 }
             }
-            if (openDialogEqualsPasswords.value) {
+            if (!openDialogEqualsPasswords.value) {
                 alertDialog(openDialogEqualsPasswords, "Пароли не совпадают")
             }
             if (openDialogAlertName.value) {
@@ -187,7 +189,9 @@ fun alertDialog(openDialog: MutableState<Boolean>, error: String) {
             ) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { openDialog.value = false }
+                    onClick = {
+                        openDialog.value = !openDialog.value
+                    }
                 ) {
                     Text("Назад")
                 }

@@ -6,18 +6,21 @@ import com.myapplication.exception.DataException;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigInteger;
 import java.util.Calendar;
 
 @Getter
 @Setter
 @Composable
 public class Profile {
+    public BigInteger user_id;
     public Bitmap photo;
     public FullName name;
     public Calendar dateOfBirth;
     public char gender;
 
-    public Profile(FullName name, Calendar dateOfBirth, char gender) throws DataException {
+    public Profile(BigInteger user_id, FullName name, Calendar dateOfBirth, char gender) throws DataException {
+        this.user_id = user_id;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.photo = null;

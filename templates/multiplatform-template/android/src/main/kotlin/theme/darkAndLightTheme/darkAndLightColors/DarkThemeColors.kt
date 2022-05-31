@@ -1,6 +1,7 @@
-package theme.color
+package theme.darkAndLightTheme.darkAndLightColors
 
 import androidx.compose.ui.graphics.Color
+import theme.color.DarkBlue
 
 val primaryDark = Color(0xFF003C1C)
 val backGroundDark = Color(0xFF1b1b1b)

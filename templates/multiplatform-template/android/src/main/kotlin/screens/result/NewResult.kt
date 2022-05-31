@@ -9,11 +9,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.myapplication.model.Note
+import com.myapplication.model.Profile
 import factory.RequestFactory.noteService
 import factory.call
 import screens.navigation.BottomBarScreen
@@ -37,7 +35,7 @@ import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun newResultScreen(navController: NavHostController) {
+fun newResultScreen(navController: NavHostController, profile: MutableState<Profile>) {
     appTheme {
         Column(
             modifier = Modifier
@@ -143,6 +141,7 @@ fun newResultScreen(navController: NavHostController) {
                             enabled = getEnabledSave(test, result, referenceRange),
                             onClick = {
                                 val note = Note(
+                                    profile.value.user_id,
                                     UUID.randomUUID(),
                                     lab,
                                     test,

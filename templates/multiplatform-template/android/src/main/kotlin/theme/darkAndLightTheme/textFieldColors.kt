@@ -5,6 +5,10 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import theme.darkAndLightTheme.TypeTheme
+import theme.darkAndLightTheme.darkAndLightColors.backGroundDark
+import theme.darkAndLightTheme.darkAndLightColors.backGroundLight
+import theme.darkAndLightTheme.darkAndLightColors.onBackgroundDark
+import theme.darkAndLightTheme.darkAndLightColors.onBackgroundLight
 
 @Composable
 fun getTextFieldColors(): TextFieldColors {
