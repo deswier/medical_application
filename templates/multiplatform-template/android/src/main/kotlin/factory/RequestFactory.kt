@@ -15,8 +15,8 @@ object RequestFactory {
     private val objectMapper: ObjectMapper = ObjectMapper().let {
         it.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     }
-    private val okHttpClient: OkHttpClient = OkHttpClient().also {
-        it.interceptors().add { chain ->
+    private val okHttpClient: OkHttpClient = OkHttpClient.Builder().let {
+        it.addInterceptor { chain ->
             chain.proceed(
                 chain.request().newBuilder()
                     .header("Authorization", "Basic dXNlcjE6dXNlcjFQYXNz")
@@ -24,7 +24,7 @@ object RequestFactory {
                     .build()
             )
         }
-    }
+    }.build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(JacksonConverterFactory.create(objectMapper))
