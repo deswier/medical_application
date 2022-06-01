@@ -6,7 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -19,13 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavHostController
 import com.myapplication.model.FullName
 import com.myapplication.model.Profile
+import factory.RequestFactory
 import theme.color.appTheme
 import tools.getBackgroundColor
 import tools.getTextColor
@@ -61,8 +60,9 @@ fun LogIn(navController: NavHostController, profile: MutableState<Profile>) {
                 )
                 TextField(
                     label = { Text(text = "Пароль") },
-                    value = (getHiddenPassword(password)),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    value = password.value,
+                    //  value = (getHiddenPassword(password)),
+                    //  keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     onValueChange = {
                         password.value = it
                     }
@@ -79,6 +79,8 @@ fun LogIn(navController: NavHostController, profile: MutableState<Profile>) {
                     onClick = {
                         //todo
                         Log.i(javaClass.simpleName, "Log in")
+                        RequestFactory.login = log.value;
+                        RequestFactory.password = password.value
                         profile.value = Profile(FullName("Alina", "Mikhaleva"), Calendar.getInstance(), 'F', null)
                         successLogIn.value = true
                     }
@@ -107,7 +109,7 @@ fun LogIn(navController: NavHostController, profile: MutableState<Profile>) {
 }
 
 fun getEnabledLogIn(log: MutableState<String>, password: MutableState<String>): Boolean {
-    return log.value.length >= 5 && password.value.length >= 8
+    return log.value.length >= 4 && password.value.length >= 5
 }
 
 fun getHiddenPassword(password: MutableState<String>): String {

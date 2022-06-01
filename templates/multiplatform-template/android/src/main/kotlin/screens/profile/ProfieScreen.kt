@@ -30,6 +30,7 @@ import theme.darkAndLightTheme.TypeTheme
 import theme.darkAndLightTheme.darkAndLightColors.imagePickerTheme
 import theme.darkAndLightTheme.radioButtonTheme
 import tools.datePickerTextField
+import tools.getBackgroundColor
 import tools.getTextColor
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -180,15 +181,15 @@ fun profileScreen(navController: NavHostController, profile: MutableState<Profil
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.White,
+                            backgroundColor = getBackgroundColor(),
                             contentColor = Color.Red
                         ),
-                        elevation = null,
                         enabled = editProfile.value,
                         onClick = {
                             //todo
-//                            profile.value.clearProfile()
-//                            LogIn(navController,profile)
+                            profile.value = Profile()
+                            //navController.navigate("logIn")
+                            //LogIn(navController,profile)
                         }
                     ) {
                         Text("Выйти", fontStyle = FontStyle.Normal, fontSize = 15.sp)

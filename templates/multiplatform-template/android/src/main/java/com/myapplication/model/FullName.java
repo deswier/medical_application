@@ -15,14 +15,19 @@ import java.util.regex.Pattern;
 public class FullName implements Serializable {
     public String firstName;
     public String secondName;
-    private static final String regexNameRussian = ("^([A-Za]+$)");
-    private static final String regexNameEnglish = ("^[А-Яa]+$");
+//    private static final String regexNameRussian = ("^([A-Za]+$)");
+//    private static final String regexNameEnglish = ("^[А-Яa]+$");
 
-//    private static final String regexName = ("([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{1,23})");
+    private static final String regexName = ("([А-Я]{1}[а-яё]{1,23}|[A-Z]{1}[a-z]{1,23})");
 
     public FullName(String firstName, String secondName) throws DataException {
         setFirstName(firstName);
         setSecondName(secondName);
+    }
+
+    public FullName() throws DataException {
+        firstName = "";
+        secondName = "";
     }
 
     public String getCorrectName(String name) throws DataException {
@@ -60,7 +65,7 @@ public class FullName implements Serializable {
 
     boolean isCorrectName(String name) {
         try {
-            return Pattern.compile(FullName.regexNameRussian).matcher(name).matches() || Pattern.compile(FullName.regexNameEnglish).matcher(name).matches();
+            return Pattern.compile(FullName.regexName).matcher(name).matches(); //|| Pattern.compile(FullName.regexNameEnglish).matcher(name).matches();
         } catch (NullPointerException e) {
             return false;
         }

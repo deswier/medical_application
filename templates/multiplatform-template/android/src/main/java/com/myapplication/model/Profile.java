@@ -28,22 +28,22 @@ public class Profile {
         setGender(gender);
     }
 
-    public Profile() {
+    public Profile() throws DataException {
         emptyProfile();
     }
 
-    private void emptyProfile() {
+    private void emptyProfile() throws DataException {
         photo = null;
-        name = null;
+        name = new FullName();
         dateOfBirth = null;
     }
 
-    public void clearProfile() {
+    public void clearProfile() throws DataException {
         emptyProfile();
     }
 
-    public Boolean isEmptyProfile() {
-        return photo == null && name == null && dateOfBirth == null;
+    public Boolean isEmptyProfile() throws DataException {
+        return photo == null && name.equals(new FullName()) && dateOfBirth == null;
     }
 
     public Profile(FullName name, Calendar dateOfBirth, char gender, Bitmap photo) throws DataException {
