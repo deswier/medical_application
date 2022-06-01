@@ -74,7 +74,7 @@ fun outlinedTextFieldFolder(
         )
         if (isError) {
             Text(
-                text = "Field can't be empty",
+                text = "Поле не может быть пустым",
                 color = MaterialTheme.colors.error,
                 style = MaterialTheme.typography.caption,
                 modifier = Modifier.padding(start = 16.dp, top = 0.dp)

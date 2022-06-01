@@ -12,23 +12,30 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.myapplication.model.FullName
 import com.myapplication.model.Profile
-import screens.autorize.registration
+import screens.autorize.LogIn
 import screens.navigation.BottomBarScreen
 import screens.navigation.BottomNavGraph
 import theme.color.appTheme
+import java.math.BigInteger
+import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
     var profile = remember {
-        mutableStateOf(Profile())
+        mutableStateOf(Profile(BigInteger("1"), FullName("Alina", "Mikhaleva"), Calendar.getInstance(), 'F'))
+        //mutableStateOf(Profile())
     }
     appTheme {
-        if (profile.value.isEmptyProfile) registration(navController)
-        else
+        if (profile.value.isEmptyProfile) {
+            println("empty profile")
+            LogIn(navController, profile)
+        } else
             Scaffold(bottomBar = { BottomBar(navController = navController) }) {
+                println("NOT empty profile")
                 BottomNavGraph(navController = navController, profile)
             }
     }
